@@ -1,0 +1,198 @@
+{{- partialCached "display-dropdown-FEC.html" . -}}
+{{- partialCached "display-dropdown-manufacturer.html" . -}}
+{{- partialCached "display-dropdown-movie.html" . -}}
+
+{{- $tagCategories := dict
+  "Animatronics & Walkarounds" (slice "Animatronic Shows" "Stage Variations" "Animatronics" "Retrofits" "Costumed Characters" "Animatronic Repair & Preservation")
+  "Showtapes" (slice "Showtapes" "Showtape Formats" "Live Shows" "Showtape Puppets" "Family Vision" "ShowBiz Pizza Programs")
+  "Products" (slice "Merchandise" "Menu Items" "Tokens" "Tickets" "Movies" "Video Games")
+  "Locations" (slice "Locations" "Arcade Games" "Employee Wear" "Remodels & Initiatives" "Store Fixtures" "Ad Vehicles" )
+  "Hardware & Software" (slice "Animatronic Control Systems" "Other Systems" "Programming Systems"
+  "Animatronic Control Systems")
+  "Documents" (slice "Promotional Material" "Documents" "Corporate Documents" "Training, Updates, & Company Media")
+  "Media" (slice "Photos" "Videos" "News Footage" "Commercials")
+  "History" (slice "History" "Events" "Characters")
+  -}}
+
+<div class="category-tags" id="category-all" style="display: block;">
+  {{- partial "list-all-tags.html" . -}}
+</div>
+
+{{- $categories := .Site.Taxonomies.categories -}}
+<div id="tagsContainer">
+  {{- range $categoryName, $pages := $categories -}}
+    <div class="category-tags" id="category-{{- $categoryName | urlize -}}" style="display: none;">
+      {{- $tags := dict -}} <!-- Initialize a dictionary to store tags and counts -->
+      {{- range $pages -}}
+        {{- $currentPage := . -}}
+        {{- range $currentPage.Params.tags -}} <!-- Iterate over tags in each page -->
+          {{- $tag := . -}}
+          {{- $count := index $tags $tag -}} <!-- Get current count for the tag -->
+          {{- if $count -}}
+            {{- $tags = merge $tags (dict $tag (add $count 1)) -}}
+          {{- else -}}
+            {{- $tags = merge $tags (dict $tag 1) -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $categorizedTags := dict -}} <!-- Store categorized tags -->
+      {{- $otherTags := dict -}} <!-- Store other tags -->
+
+      <!-- Loop through tags and assign them to categories -->
+      {{- range $tag, $count := $tags -}}
+        {{- $found := false -}}
+        {{- range $category, $categoryTags := $tagCategories -}}
+          {{- if in $categoryTags $tag -}} <!-- Check if tag belongs to category -->
+            {{- $categorizedTags = merge $categorizedTags (dict $category (merge (index $categorizedTags $category | default dict) (dict $tag $count))) -}}
+            {{- $found = true -}}
+          {{- end -}}
+        {{- end -}}
+
+        <!-- If no matching category, place tag in Other -->
+        {{- if not $found -}}
+          {{- $otherTags = merge $otherTags (dict $tag $count) -}}
+        {{- end -}}
+      {{- end -}}
+
+
+      <div class="tri-column">
+        <ul>
+          <!-- Output categorized tags -->
+          {{- range $category, $tags := $categorizedTags -}}
+          <div class="reg-column">
+            <strong>{{- $category -}}</strong>
+            <ul>
+              {{- range $tag, $count := $tags -}}
+              {{- $tagFix := (replace $tag " " "-") -}}
+              {{- $tagFix := (replace $tagFix "&-" "") -}}
+              {{- $tagFix := (replace $tagFix "," "") -}}
+              <li>
+                <a href="{{- (site.GetPage (printf "/tags/%s" $tagFix)).RelPermalink -}}" title="All pages with tag <i>{{- $tag -}}</i>">{{- $tag -}}</a>
+                <sup>{{- $count -}}</sup>
+              </li>
+              {{- end -}}
+            </ul>
+            <hr>
+          </div>
+          {{- end -}}
+    
+          <!-- Output other tags -->
+          {{- if gt (len $otherTags) 0 -}}
+          <div class="reg-column">
+            <strong>Other</strong>
+            <ul>
+              {{- range $tag, $count := $otherTags -}}
+              {{- $tagFix := (replace $tag " " "-") -}}
+              {{- $tagFix := (replace $tagFix "&-" "") -}}
+              {{- $tagFix := (replace $tagFix "," "") -}}
+              <li>
+                <a href="{{- (site.GetPage (printf "/tags/%s" $tagFix)).RelPermalink -}}" title="All pages with tag <i>{{- $tag -}}</i>">{{- $tag -}}</a>
+                <sup>{{- $count -}}</sup>
+              </li>
+              {{- end -}}
+              {{- end -}}
+            </ul>
+          </div>
+        </ul>
+      </div>
+  {{- end -}}
+</div>
+
+
+
+
+<script>
+  window.onload = function() {
+    // Retrieve the saved category from localStorage
+    var FECLoadValue = localStorage.getItem('selectedFEC');
+    var FEC = document.getElementById("FECSelect");
+    var MANULoadValue = localStorage.getItem('selectedManufacturer');
+    var MANU = document.getElementById("manufacturerSelect");
+    var MOVIELoadValue = localStorage.getItem('selectedMovie');
+    var MOVIE = document.getElementById("movieSelect");
+
+    if (FECLoadValue) {
+      FEC.value = FECLoadValue;
+    }
+    if (MANULoadValue) {
+      MANU.value = MANULoadValue;
+    }
+    if (MOVIELoadValue) {
+      MOVIE.value = MOVIELoadValue;
+    }
+    showCategoryTags();
+  }
+
+  function showCategoryTags(check) {
+    var selectedCategory = "all";
+    var FEC = document.getElementById("FECSelect");
+    var MANU = document.getElementById("manufacturerSelect");
+    var MOVIE = document.getElementById("movieSelect");
+
+    if(check == "FEC")
+    {
+      selectedCategory = FEC.value;
+      document.getElementById("manufacturerSelect").value = "all";
+      document.getElementById("movieSelect").value = "all";
+      localStorage.setItem('selectedFEC', FEC.value);
+      localStorage.removeItem('selectedManufacturer');
+      localStorage.removeItem('selectedMovie');
+    }
+    else if(check == "MANU")
+    {    
+      selectedCategory = MANU.value;
+      document.getElementById("FECSelect").value = "all";
+      document.getElementById("movieSelect").value = "all";
+      localStorage.setItem('selectedManufacturer', MANU.value);
+      localStorage.removeItem('selectedFEC');
+      localStorage.removeItem('selectedMovie');
+    }
+    else if(check == "MOVIE")
+    {    
+      selectedCategory = MOVIE.value;
+      document.getElementById("FECSelect").value = "all";
+      document.getElementById("manufacturerSelect").value = "all";
+      localStorage.setItem('selectedMovie', MOVIE.value);
+      localStorage.removeItem('selectedFEC');
+      localStorage.removeItem('selectedManufacturer');
+    }
+    if(FEC.value != "all")
+    {
+      selectedCategory = FEC.value;
+      document.getElementById("manufacturerSelect").value = "all";
+      document.getElementById("movieSelect").value = "all";
+      localStorage.setItem('selectedFEC', FEC.value);
+      localStorage.removeItem('selectedManufacturer');
+      localStorage.removeItem('selectedMovie');
+    }
+    if(MANU.value != "all")
+    {
+      selectedCategory = MANU.value;
+      document.getElementById("FECSelect").value = "all";
+      document.getElementById("movieSelect").value = "all";
+      localStorage.setItem('selectedManufacturer', MANU.value);
+      localStorage.removeItem('selectedFEC');
+      localStorage.removeItem('selectedMovie');
+    }
+    if(MOVIE.value != "all")
+    {
+      selectedCategory = MOVIE.value;
+      document.getElementById("FECSelect").value = "all";
+      document.getElementById("manufacturerSelect").value = "all";
+      localStorage.setItem('selectedMovie', MOVIE.value);
+      localStorage.removeItem('selectedFEC');
+      localStorage.removeItem('selectedManufacturer');
+    }
+
+    var categories = document.getElementsByClassName("category-tags");
+    for (var i = 0; i < categories.length; i++) {
+      categories[i].style.display = "none";
+    }
+
+    // Show the selected category's tags
+    var selectedDiv = document.getElementById("category-" + selectedCategory);
+    if (selectedDiv) {
+      selectedDiv.style.display = "block";
+    }
+  }
+</script>

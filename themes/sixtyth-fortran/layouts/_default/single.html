@@ -1,0 +1,16 @@
+{{- define "main" -}}
+  {{- $layout := "baseArticle" -}}
+  {{- with .Params.tags -}}
+    {{- if in . "User" -}}
+      {{- $layout = "user" -}}
+    {{- else if in . "Locations" -}}
+      {{- $layout = "baseStoreArticle" -}}
+    {{- else if in . "Photos" -}}
+      {{- $layout = "basePhotoArticle" -}}
+    {{- else if in . "Videos" -}}
+      {{- $layout = "baseVideoArticle" -}}
+    {{- end -}}
+  {{- end -}}
+  {{- partial $layout . -}}
+{{- end -}}
+

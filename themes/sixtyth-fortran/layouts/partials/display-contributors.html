@@ -1,0 +1,25 @@
+
+<aside data-pagefind-ignore>
+<div class="contributors"><strong>Article Contributed By: </strong>
+    {{- if .Params.contributors -}}
+      {{- $len := len .Params.contributors -}}
+      {{- range $index, $element := .Params.contributors -}}
+        {{- $slug := replace $element " " "-" | lower -}}
+        {{- if os.FileExists (printf "content/users/%s.html" $element) -}}
+          {{- $userURL := relURL (printf "users/%s/" $slug) -}}
+          <a href="{{- $userURL -}}">{{- $element -}}</a>
+        {{- else -}}
+          {{- $element -}}
+        {{- end -}}
+        {{- if lt (add $index 1) $len -}}{{- ", " -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      <strong>NOOOOBODY!!!!!</strong>
+    {{- end -}}
+    {{ with .GitInfo }}
+      <strong> | Last updated on: </strong>{{ .AuthorDate.Format "Jan. 2, 2006" }}
+    {{ end }}
+  </div>
+<hr>
+</aside>
