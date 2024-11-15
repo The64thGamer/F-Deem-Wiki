@@ -1,12 +1,12 @@
 :root {
-  --blue:#233355;
-  --aqua: #39A481;
-  --white: #dbd1b1;
+  --blue:#304c5e;
+  --aqua: #DBD836;
+  --white: #d7d4ae;
   --deep-white: #62777a;
-  --yellow: #e0961f;
-  --orange: #D44A02;
-  --deep-orange: #993b08;
-  --brown: #2c2422;
+  --yellow: #ce96a9;
+  --orange: #2C7E97;
+  --deep-orange: #2c7b5a;
+  --brown: #2d2031;
 }
 
 [name=":0"],
@@ -107,12 +107,12 @@ h2{
   line-height: 1.5;
   max-width: 65em;
   min-width: 30em;
-  max-height: 5.5em;
-  min-height: 5.5em;
+  max-height: 8em;
+  min-height: 8em;
   border-color: var(--brown);
   border-style: solid;
   border-width: .25em;
-  border-radius: 5em;
+  border-radius: 1.25em;
   margin-top: 1em;
   margin-bottom: 1em;
   box-shadow: 0 0 0 0.25em var(--orange);

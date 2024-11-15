@@ -1,6 +1,6 @@
 baseURL = 'https://cheeseepedia.org/'
 languageCode = 'en-us'
-title = 'Cheese-E-Pedia'
+title = "F'Deem"
 theme = 'sixtyth-fortran'
 refLinksErrorLevel = 'WARNING'
 enableGitInfo = true
