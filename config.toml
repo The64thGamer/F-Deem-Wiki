@@ -1,4 +1,4 @@
-baseURL = 'https://cheeseepedia.org/'
+baseURL = 'https://f-deem.org/'
 languageCode = 'en-us'
 title = "F'Deem"
 theme = 'sixtyth-fortran'
