@@ -15,11 +15,6 @@ name = 'Home'
 pageRef = '/'
 weight = 10
 
-[[menus.main]]
-name = 'All Pages'
-pageRef = '/wiki'
-weight = 40
-
 [taxonomies]
   category = 'categories'
   tag = 'tags'
