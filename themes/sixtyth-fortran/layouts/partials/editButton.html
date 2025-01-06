@@ -1,7 +1,0 @@
-{{- if .Page.File -}}
-    {{- $gitHubBaseURL := "https://github.dev/The64thGamer/cheeseepedia/blob/main/content/" -}}
-    <button class="article-editpage-button"
-        onclick="window.location.href = '{{- $gitHubBaseURL -}}{{- .Page.File.Path -}}';">
-        Edit Page
-    </button>
-{{- end -}}

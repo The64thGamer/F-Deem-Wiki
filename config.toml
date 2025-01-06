@@ -1,7 +1,7 @@
 baseURL = 'https://f-deem.org/'
 languageCode = 'en-us'
 title = "F'Deem"
-theme = 'sixtyth-fortran'
+theme = 'horsin-around'
 refLinksErrorLevel = 'WARNING'
 enableGitInfo = true
 

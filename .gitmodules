@@ -1,0 +1,3 @@
+[submodule "themes/horsin-around"]
+	path = themes/horsin-around
+	url = https://github.com/hanwenguo/hugo-theme-nostyleplease.git
