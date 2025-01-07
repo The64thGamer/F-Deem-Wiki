@@ -13,7 +13,14 @@
 		{{ else }}
 			<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
 		{{ end }}
-		<a href="https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Download .stl</a>
+		{{ if in .Params.categories "Piece" }}
+			<a href="https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Download .stl</a>
+		{{ end }}
+		{{ if in .Params.tags "Versions" }}
+			<a href="https://github.com/The64thGamer/F-Deem/releases/download/{{.Title}}/F.Deem.Linux.zip"download>Game Download (Linux)</a>
+			<br>
+			<a href="https://github.com/The64thGamer/F-Deem/releases/download/{{.Title}}/F.Deem.Windows.zip"download>Game Download (Windows)</a>
+		{{ end }}
 		<br>
 		<!-- <a href="prusaslicer://https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Slice in PrusaSlicer</a> -->
 		<div>
