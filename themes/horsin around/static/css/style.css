@@ -137,6 +137,13 @@ a {
   max-height: 2.25vw;
 }
 
+.article-thumbnail img{
+  max-width: 25vw;
+  height: auto;
+  margin: auto;
+  display: flex;
+}
+
 @font-face {
   font-family: "Mochi";
   src: url('/Fonts/TMT-MiniMochi-Sweet.otf') format('opentype');
