@@ -1,9 +1,9 @@
 {{- $tagCategories := dict
-"Pieces (Size)" (slice "1x1" "1x2" "1x3" "1x4" "1x5" "1x6" "1x8" "1x10" "1x16" "2x2" "2x3" "2x4" "2x6" "2x8" "2x10"
+"Sizes" (slice "1x1" "1x2" "1x3" "1x4" "1x5" "1x6" "1x8" "1x10" "1x16" "2x2" "2x3" "2x4" "2x6" "2x8" "2x10"
 "2x16" "3x2" "4x4" "4x6" "8x8" "8x12" "16x16")
-"Pieces (Type)" (slice "Brick" "Plate" "Storage" "Accessory" "Figure")
-"Pieces (Shape)" (slice "Rounded" "Ramp" "Cliff" "Debossed" "Out Peg" "In Peg")
-"Pieces (Theme)" (slice "Construction" "Food")
+"Types" (slice "Brick" "Plate" "Storage" "Accessory" "Figure")
+"Shapes" (slice "Rounded" "Ramp" "Cliff" "Debossed" "Out Peg" "In Peg")
+"Themes" (slice "Construction" "Food")
 }}
 
 {{- $site := .Site.RegularPages -}}
@@ -37,7 +37,7 @@
 
 						{{- $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize -}}
 						<li>
-							<a href="{{ " /tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
+							<a href="{{ "tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
 								{{- $tag -}}<sup>({{- $count -}})</sup>
 							</a>
 						</li>
