@@ -1,4 +1,4 @@
-baseURL = 'https://f-deem.org/'
+baseURL = 'https://wiki.f-deem.org/'
 languageCode = 'en-us'
 title = "F'Deem"
 theme = 'horsin-around'
