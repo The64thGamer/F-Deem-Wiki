@@ -16,6 +16,20 @@
 					<a href="/" class="navbar-brand">F'Deem</a>
 				</li>
 				<li class="navbar-item dropdown">
+					<a href="/tags/versions" class="navbar-brand">Game Versions</a>
+					<ul class="dropdown-menu">
+						{{- range $site -}}
+							{{- if in .Params.tags "Versions" -}}
+							<li>
+								<a href="{{ .RelPermalink }}" title="{{ .Title }}">
+									{{ .Title }}
+								</a>
+							</li>
+							{{- end -}}
+						{{- end -}}
+					</ul>
+				</li>
+				<li class="navbar-item dropdown">
 					<a href="/categories/piece" class="navbar-brand">All Pieces</a>
 				</li>
 				{{- range $categoryName, $tags := $tagCategories -}}
@@ -37,7 +51,7 @@
 
 						{{- $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize -}}
 						<li>
-							<a href="{{ "tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
+							<a href="{{ " tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
 								{{- $tag -}}<sup>({{- $count -}})</sup>
 							</a>
 						</li>

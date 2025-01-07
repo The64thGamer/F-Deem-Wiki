@@ -16,6 +16,8 @@ html, body{
   background-color: var(--brown);
   color: var(--white);
   font-family: "Eirian";
+  font-size: 1vw;
+  margin: 0;
 }
 
 
@@ -26,6 +28,9 @@ main, footer{
 
 header{
   font-family: "Mochi";
+  margin-top: 0vw;
+  margin-bottom: 1vw;
+  font-size: 1.25vw;
 }
 
 .navbar {
@@ -50,15 +55,15 @@ a {
 
 .navbar-menu {
   display: flex;
-  /* Display menu items in a row */
   list-style: none;
-  margin: 0;
+  margin: .5vw;
   padding: 0;
 }
 
 .dropdown-menu li {
-  padding: 5px 20px;
+  padding: .25vw 1vw;
   font-family: "Eirian";
+  font-size: 1vw;
 }
 
 
@@ -69,7 +74,7 @@ a {
 
 .navbar-item {
   position: relative;
-  margin: 0 10px;
+  margin: 0 1.5vw;
 }
 
 .dropdown-menu {
@@ -94,9 +99,9 @@ a {
 
 .gallery-item{
   max-width: 6vw;
-  max-height: 8.25vw;
+  max-height: 9vw;
   min-width: 6vw;
-  min-height: 8.25vw;
+  min-height: 9vw;
   border: solid;
   background-color: var(--gray);
   border-width: 0.5vw;
@@ -107,6 +112,7 @@ a {
   box-shadow: 0vw 0vw .5vw var(--abyss-gray);
   margin-top: .4vw;
   margin-bottom: .4vw;
+  text-overflow:clip;
 }
 
 .gallery-item:hover{
@@ -127,6 +133,8 @@ a {
 .gallery-link{
   margin: 0.25vw;
   text-align: center;
+  overflow: hidden;
+  max-height: 2.25vw;
 }
 
 @font-face {
