@@ -1,0 +1,25 @@
+{{ define "main" }}
+<main>
+	<article>
+		<h1>{{ .Title }}</h1>
+		{{ range .Params.tags }}
+			<a href="{{ " /tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+		{{ end }}
+		{{ range .Params.categories }}
+			<a href="{{ " /categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+		{{ end }}
+		{{ if .Params.pageThumbnailFile }}
+			<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+		{{ else }}
+			<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+		{{ end }}
+		<a href="https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Download .stl</a>
+		<br>
+		<!-- <a href="prusaslicer://https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Slice in PrusaSlicer</a> -->
+		<div>
+			{{ .Content }}
+		</div>
+	</article>
+</main>
+{{ partial "sidebar.html" . }}
+{{ end }}

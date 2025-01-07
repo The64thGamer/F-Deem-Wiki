@@ -1,0 +1,16 @@
+{{ $listtitle := .Title }}
+{{ if or .Title .Content }}
+<div>
+    {{ with .Title }}<h1>{{ . }}</h1>{{ end }}
+    {{ with .Content }}<div>{{ . }}</div>{{ end }}
+</div>
+{{ end }}
+<div class="gallery-container">
+    {{ range .Pages }}
+        <div class="gallery-item">
+            <div class="gallery-link">
+                <a href="{{ .RelPermalink }}">{{ .Title | truncate 23 "..."}}</a>
+            </div>
+        </div>
+    {{ end }}
+</div>

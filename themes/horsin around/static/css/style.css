@@ -1,0 +1,92 @@
+html{
+  background-color: black;
+  color: white;
+}
+
+
+main, footer{
+  width: 55vw;
+  margin: auto;
+}
+
+.navbar {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #1f1b1b;
+  color: #fff;
+}
+
+a {
+  color: rgb(255, 201, 100);
+  text-decoration: none;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-menu {
+  display: flex;
+  /* Display menu items in a row */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown-menu li {
+  padding: 5px 20px;
+}
+
+.dropdown-menu li a {
+  color: #fff;
+}
+
+.navbar-item:hover .dropdown-menu {
+  display: block;
+}
+
+
+.navbar-item {
+  position: relative;
+  margin: 0 10px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #444;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-container {
+  display:flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gallery-item{
+  max-width: 6vw;
+  max-height: 7.5vw;
+  min-width: 6vw;
+  min-height: 7.5vw;
+  margin: 0.5vw;
+}
+
+.gallery-picture img{
+  width: 6vw;
+  height: 6vw;
+}
+
+.gallery-link{
+  margin: 0.25vw;
+}

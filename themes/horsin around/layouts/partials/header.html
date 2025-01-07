@@ -1,0 +1,52 @@
+{{- $tagCategories := dict
+"Pieces (Size)" (slice "1x1" "1x2" "1x3" "1x4" "1x5" "1x6" "1x8" "1x10" "1x16" "2x2" "2x3" "2x4" "2x6" "2x8" "2x10"
+"2x16" "3x2" "4x4" "4x6" "8x8" "8x12" "16x16")
+"Pieces (Type)" (slice "Brick" "Plate" "Storage" "Accessory" "Figure")
+"Pieces (Shape)" (slice "Rounded" "Ramp" "Cliff" "Debossed" "Out Peg" "In Peg")
+"Pieces (Theme)" (slice "Construction" "Food")
+}}
+
+{{- $site := .Site.RegularPages -}}
+
+<header>
+	<nav class="navbar">
+		<div class="container">
+			<ul class="navbar-menu">
+				<li class="navbar-item dropdown">
+					<a href="/" class="navbar-brand">F'Deem</a>
+				</li>
+				<li class="navbar-item dropdown">
+					<a href="/categories/piece" class="navbar-brand">All Pieces</a>
+				</li>
+				{{- range $categoryName, $tags := $tagCategories -}}
+				<li class="navbar-item dropdown">
+					<a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
+
+					{{- if $tags -}} <!-- Only render dropdown if there are tags -->
+					<ul class="dropdown-menu">
+						{{- range $tags -}}
+						{{- $tag := . -}}
+						{{- $count := 0 -}}
+
+						<!-- Count pages with the current tag -->
+						{{- range $site -}}
+						{{- if in .Params.tags $tag -}}
+						{{- $count = add $count 1 -}}
+						{{- end -}}
+						{{- end -}}
+
+						{{- $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize -}}
+						<li>
+							<a href="{{ " /tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
+								{{- $tag -}}<sup>({{- $count -}})</sup>
+							</a>
+						</li>
+						{{- end -}}
+					</ul>
+					{{- end -}}
+				</li>
+				{{- end -}}
+			</ul>
+		</div>
+	</nav>
+</header>

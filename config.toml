@@ -1,7 +1,7 @@
 baseURL = 'https://wiki.f-deem.org/'
 languageCode = 'en-us'
 title = "F'Deem"
-theme = 'horsin-around'
+theme = 'horsin around'
 refLinksErrorLevel = 'WARNING'
 enableGitInfo = true
 

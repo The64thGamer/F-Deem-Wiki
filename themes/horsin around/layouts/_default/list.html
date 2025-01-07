@@ -1,0 +1,10 @@
+{{- define "main" -}}
+<main>
+  {{- $layout := "list-with-photos" -}}
+  {{- $tagCategories := slice "game" -}}
+  {{- if in $tagCategories .Title -}}
+    {{- $layout = "list" -}}
+  {{- end -}}
+  {{- partial $layout . -}}
+</main>
+{{- end -}}
