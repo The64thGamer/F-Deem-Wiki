@@ -1,0 +1,29 @@
++++
+title = "Server Variables"   
+draft = false              
+tags = ["Documentation"]                 
+categories = ["Game"]            
+pageThumbnailFile = ""     
+startDate = "2024-12-29"           
+endDate = "2025-01-03"
+contributors = ["The 64th Gamer"]
++++
+
+<h2>"serverVariables" (Dictionary)</h2>
+This variable is a Dictionary that's openly accessible by anyone joining or pinging a server.
+<ul>
+    <li>"totalConnections" (int): keeps track of total players that have joined the server. Will assign the number to players without names as "Guest 1" "Guest 2" etc.</li>
+    <li>"serverUptime" (float): Current uptime of server.</li>
+    <li>"serverName" (string): Name of the server.</li>
+</ul>
+<h2>"playerInfo" (Dictionary)</h2>
+This Dictionary of Dictionaries contains player values known to all players. The root Dictionary uses the Player ID as a key, with the value being a dictionary of the values.
+<ul>
+    <li>"permissions" (string): An identifier for what role a player has been assigned in the world. Players start as "pingas" for pinging the server. When requesting to join they will become "member". The "cheater" role allows them to use more commands. The "admin" role allows assigning other players roles.</li>
+</ul>
+<h2>"secretPlayerInfo" (Dictionary)</h2>
+This Dictionary of Dictionaries contains player values known only to the server. The root Dictionary uses the Player ID as a key, with the value being a dictionary of the values.
+<ul>
+    <li>"disconnectTimer" (float): A timer used for players who are pinging the server but have not left or fully joined. When the timer reaches 0 it will auto disconnect to prevent stalling the server.</li>
+    <li>"mapPositionX", "mapPositionY", "mapPositionZ", "mapPositionW" (int): A collection of values for showing which map and world the current player is occupied in.</li>
+</ul>

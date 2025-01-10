@@ -39,6 +39,12 @@ header{
   align-items: center;
   padding: 10px 20px;
   background-color: #1f1b1b;
+  max-height: 2.5vw;
+}
+
+.logo img{
+  max-height: 2.5vw;
+  align-content: center;
 }
 
 a {
@@ -75,6 +81,7 @@ a {
 .navbar-item {
   position: relative;
   margin: 0 1.5vw;
+  align-content: center;
 }
 
 .dropdown-menu {
