@@ -33,6 +33,10 @@ header{
   font-size: 1.25vw;
 }
 
+header a{
+  text-decoration: none;
+}
+
 .navbar {
   display: flex;
   justify-content: start;
@@ -48,7 +52,6 @@ header{
 }
 
 a {
-  text-decoration: none;
   color: var(--white);
 }
 
