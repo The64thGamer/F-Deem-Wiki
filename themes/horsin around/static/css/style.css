@@ -41,7 +41,7 @@ header a{
   display: flex;
   justify-content: start;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1vw 2vw;
   background-color: #1f1b1b;
   max-height: 2.5vw;
 }
@@ -95,8 +95,8 @@ a {
   background-color: #444;
   list-style: none;
   margin: 0;
-  padding: 10px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 1vw 0;
+  box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.2);
 }
 
 .gallery-container {
