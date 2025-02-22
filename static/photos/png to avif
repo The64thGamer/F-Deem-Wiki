@@ -1,0 +1,2 @@
+mogrify -format avif -depth 10 -define heic:speed=2 *.png
+
