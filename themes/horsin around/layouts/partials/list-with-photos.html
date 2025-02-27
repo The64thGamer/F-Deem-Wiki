@@ -1,7 +1,8 @@
 {{ $listtitle := .Title }}
+{{ $counts := len .Pages }}
 {{ if or .Title .Content }}
 <div>
-    {{ with .Title }}<h1>{{ . }}</h1>{{ end }}
+    {{ with .Title }}<h1>{{ . }} ({{ $counts }})</h1>{{ end }}
     {{ with .Content }}<div>{{ . }}</div>{{ end }}
 </div>
 {{ end }}
