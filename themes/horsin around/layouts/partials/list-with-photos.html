@@ -3,25 +3,70 @@
 {{ if or .Title .Content }}
 <div>
     {{ with .Title }}<h1>{{ . }} ({{ $counts }})</h1>{{ end }}
-    {{ with .Content }}<div>{{ . }}</div>{{ end }}
+    <div class="sort-controls">
+        <label for="sort-select">Sort by:</label>
+        <select id="sort-select">
+          <option value="alpha">Alphabetical</option>
+          <option value="part">Part Number</option>
+        </select>
+      </div>
+    {{ with .Content }}<div>{{ . }}</div>{{ end }}  
 </div>
 {{ end }}
-<div class="gallery-container">
-    {{ range .Pages }}
-        <div class="gallery-item">
-            <div class="gallery-picture">
-                <a href="{{ .RelPermalink }}">
-                {{ if .Params.pageThumbnailFile }}
-                    <img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
-                {{ else }}
-                    <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
-                {{ end }}
-                </a>
-            </div>
 
-            <div class="gallery-link">
-                <a href="{{ .RelPermalink }}">{{ .Title | truncate 17 "..."}}</a>
-            </div>
+  
+  <div class="gallery-container" id="gallery">
+    {{ range .Pages }}
+      <div class="gallery-item"
+           data-title="{{ .Title | lower }}"
+           data-part="{{ .Params.partNumber }}">
+        <div class="gallery-picture">
+          <a href="{{ .RelPermalink }}">
+            {{ if .Params.pageThumbnailFile }}
+              <img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+            {{ else }}
+              <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+            {{ end }}
+          </a>
         </div>
+        <div class="gallery-link">
+          <a href="{{ .RelPermalink }}">{{ .Title | truncate 17 "..." }}</a>
+        </div>
+      </div>
     {{ end }}
-</div>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sortSelect = document.getElementById("sort-select");
+      const gallery = document.getElementById("gallery");
+    
+      function sortGallery(mode) {
+        const items = Array.from(gallery.querySelectorAll(".gallery-item"));
+    
+        const sorted = items.sort((a, b) => {
+          if (mode === "part") {
+            const partA = parseFloat(a.dataset.part || "0");
+            const partB = parseFloat(b.dataset.part || "0");
+            return partA - partB;
+          } else {
+            const titleA = a.dataset.title || "";
+            const titleB = b.dataset.title || "";
+            return titleA.localeCompare(titleB);
+          }
+        });
+    
+        // Clear and re-add items
+        gallery.innerHTML = "";
+        sorted.forEach(item => gallery.appendChild(item));
+      }
+    
+      sortSelect.addEventListener("change", (e) => {
+        sortGallery(e.target.value);
+      });
+    
+      // Run default sort
+      sortGallery(sortSelect.value);
+    });
+    </script>
+    
