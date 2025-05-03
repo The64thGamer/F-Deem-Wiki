@@ -26,10 +26,10 @@
 		<h2>Tags</h2>
 		<ul>
 			{{ range .Params.categories }}
-				<li><a href="{{ " /categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
+				<li><a href="{{ "categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
 			{{ end }}
 			{{ range .Params.tags }}
-				<li><a href="{{ " /tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
+				<li><a href="{{ "tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
 			{{ end }}
 		</ul>
 	</article>
