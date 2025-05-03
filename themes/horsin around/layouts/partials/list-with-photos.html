@@ -4,38 +4,39 @@
 <div>
     {{ with .Title }}<h1>{{ . }} ({{ $counts }})</h1>{{ end }}
     <div class="sort-controls">
-        <label for="sort-select">Sort by:</label>
-        <select id="sort-select">
-          <option value="alpha">Alphabetical</option>
-          <option value="part">Part Number</option>
-        </select>
-      </div>
+      <label for="sort-select">Sort by:</label>
+      <select id="sort-select">
+        <option value="alpha">Alphabetical</option>
+        <option value="date">Creation Date</option>
+      </select>
+    </div>
     {{ with .Content }}<div>{{ . }}</div>{{ end }}  
 </div>
 {{ end }}
 
-  
-  <div class="gallery-container" id="gallery">
-    {{ range .Pages }}
-      <div class="gallery-item"
-           data-title="{{ .Title | lower }}"
-           data-part="{{ .Params.partNumber }}">
-        <div class="gallery-picture">
-          <a href="{{ .RelPermalink }}">
-            {{ if .Params.pageThumbnailFile }}
-              <img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
-            {{ else }}
-              <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
-            {{ end }}
-          </a>
-        </div>
-        <div class="gallery-link">
-          <a href="{{ .RelPermalink }}">{{ .Title | truncate 17 "..." }}</a>
-        </div>
+
+
+<div class="gallery-container" id="gallery">
+  {{ range .Pages }}
+    <div class="gallery-item"
+         data-title="{{ .Title | lower }}"
+         data-date="{{ .Params.startDate }}">
+      <div class="gallery-picture">
+        <a href="{{ .RelPermalink }}">
+          {{ if .Params.pageThumbnailFile }}
+            <img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+          {{ else }}
+            <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+          {{ end }}
+        </a>
       </div>
-    {{ end }}
-  </div>
-  
+      <div class="gallery-link">
+        <a href="{{ .RelPermalink }}">{{ .Title | truncate 17 "..." }}</a>
+      </div>
+    </div>
+  {{ end }}
+</div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const sortSelect = document.getElementById("sort-select");
@@ -45,10 +46,10 @@
         const items = Array.from(gallery.querySelectorAll(".gallery-item"));
     
         const sorted = items.sort((a, b) => {
-          if (mode === "part") {
-            const partA = parseFloat(a.dataset.part || "0");
-            const partB = parseFloat(b.dataset.part || "0");
-            return partA - partB;
+          if (mode === "date") {
+            const dateA = new Date(a.dataset.date || "1970-01-01");
+            const dateB = new Date(b.dataset.date || "1970-01-01");
+            return dateA - dateB;
           } else {
             const titleA = a.dataset.title || "";
             const titleB = b.dataset.title || "";
