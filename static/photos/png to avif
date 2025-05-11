@@ -1,2 +1,7 @@
-mogrify -format avif -depth 10 -define heic:speed=2 *.png
+#!/bin/bash
 
+for file in *.png; do
+  # Remove the .png extension and append .avif
+  base="${file%.png}"
+  avifenc --depth 10 --speed 2 "$file" "${base}.avif"
+done
