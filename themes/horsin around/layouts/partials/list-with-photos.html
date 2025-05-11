@@ -59,7 +59,9 @@
     
         // Clear and re-add items
         gallery.innerHTML = "";
-        sorted.reverse();
+        if (mode === "date") {
+          sorted.reverse();
+        }
         sorted.forEach(item => gallery.appendChild(item));
       }
     
