@@ -50,6 +50,8 @@ header a{
   justify-content: start;
   align-items: center;
   padding: 1em 2em;
+  background-image: url("/photos/backgroundtop.png");
+  background-repeat: repeat;
   background-color: #1f1b1b;
   max-height: 2.5em;
 }
