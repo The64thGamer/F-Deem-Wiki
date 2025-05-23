@@ -17,6 +17,7 @@
 
 
 html, body{
+  background-image: url("/static/photos/background.png");;
   background-color: var(--brown);
   color: var(--white);
   font-family: "Eirian";
