@@ -1,6 +1,6 @@
 {{- define "main" -}}
   {{- $layout := "basicArticle" -}}
-  {{- with .Params.tags -}}
+  {{- with .Params.categories -}}
     {{- if in . "Sets" -}}
       {{- $layout = "setArticle" -}}
     {{- else if in . "Documentation" -}}
