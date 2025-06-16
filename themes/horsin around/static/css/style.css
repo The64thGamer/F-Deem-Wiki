@@ -181,17 +181,11 @@ a {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.instruction-page:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0.75em 1.25em rgba(0, 0, 0, 0.4);
-}
-
 .instruction-page img {
   display: block;
   max-width: 100%;
   height: auto;
   margin: auto;
-  box-shadow: 0 0.3em 0.6em var(--black);
   border-radius: 0.5em;
 }
 
