@@ -1,0 +1,38 @@
+
+{{ define "main" }}
+<main>
+	<article>
+		<h1>{{ .Title }}</h1>
+
+		<div class="article-thumbnail">
+		{{ if .Params.pageThumbnailFile }}
+			<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+		{{ else }}
+			<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+		{{ end }}
+		</div>
+		{{ if in .Params.categories "Piece" }}
+			<a href="https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Download .stl</a>
+		{{ end }}
+		{{ if in .Params.tags "Versions" }}
+			<a href="https://github.com/The64thGamer/F-Deem/releases/download/{{.Title}}/F.Deem.Linux.zip"download>Game Download (Linux)</a>
+			<br>
+			<a href="https://github.com/The64thGamer/F-Deem/releases/download/{{.Title}}/F.Deem.Windows.zip"download>Game Download (Windows)</a>
+		{{ end }}
+		<br>
+		<!-- <a href="prusaslicer://https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{.Title}}.stl"download>Slice in PrusaSlicer</a> -->
+		<div>
+			{{ .Content }}
+		</div>
+		<h2>Tags</h2>
+		<ul>
+			{{ range .Params.categories }}
+				<li><a href="{{ "categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
+			{{ end }}
+			{{ range .Params.tags }}
+				<li><a href="{{ "tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
+			{{ end }}
+		</ul>
+	</article>
+</main>
+{{ end }}

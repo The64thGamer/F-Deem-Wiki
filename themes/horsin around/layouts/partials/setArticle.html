@@ -1,0 +1,29 @@
+{{ define "main" }}
+<main>
+	<article>
+		<h1>{{ .Title }}</h1>
+
+		<div class="article-thumbnail">
+			{{ if .Params.pageThumbnailFile }}
+				<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+			{{ else }}
+				<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+			{{ end }}
+		</div>
+
+		{{ if and (.Params.imageSetName) (ge .Params.imageSetAmount 1) }}
+			<div class="image-gallery">
+				{{ $base := .Params.imageSetName }}
+				{{ $count := .Params.imageSetAmount }}
+				{{ range seq 0 (sub $count 1) }}
+					<img src="/photos/{{ printf "%s%d.avif" $base . }}" alt="{{ $.Title }}">
+				{{ end }}
+			</div>
+		{{ end }}
+
+		<div>
+			{{ .Content }}
+		</div>
+	</article>
+</main>
+{{ end }}
