@@ -1,5 +1,7 @@
 <article>
-	<h1>{{ .description }}</h1>
+	{{ if .Params.description }}
+		<h1>{{ .Params.description }}</h1>
+	{{ end }}
 
 	<div class="article-thumbnail">
 		{{ if .Params.pageThumbnailFile }}
