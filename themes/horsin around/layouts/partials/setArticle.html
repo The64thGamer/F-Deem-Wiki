@@ -10,11 +10,14 @@
 	</div>
 
 	{{ if and (.Params.imageSetName) (ge .Params.imageSetAmount 1) }}
-		<div class="image-gallery">
+		<div class="instruction-pages">
 			{{ $base := .Params.imageSetName }}
 			{{ $count := .Params.imageSetAmount }}
 			{{ range seq 0 (sub $count 1) }}
-				<img src="/photos/{{ printf "%s%d.avif" $base . }}" alt="{{ $.Title }}">
+				<div class="instruction-page">
+					<div class="page-number">{{ add . 1 }}</div>
+					<img src="/photos/{{ printf "%s%d.avif" $base . }}" alt="{{ $.Title }}">
+				</div>
 			{{ end }}
 		</div>
 	{{ end }}

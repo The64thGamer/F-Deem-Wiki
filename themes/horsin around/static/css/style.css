@@ -163,6 +163,43 @@ a {
   display: flex;
 }
 
+.instruction-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.instruction-page {
+  position: relative;
+  background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  max-width: 80%;
+  margin: auto;
+}
+
+.instruction-page img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+.page-number {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: #333;
+}
+
+
 @font-face {
   font-family: "Mochi";
   src: url('/Fonts/TMT-MiniMochi-Sweet.otf') format('opentype');
