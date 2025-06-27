@@ -45,7 +45,9 @@
 		{{/* Try to find existing color group in $grouped */}}
 		{{ $existingGroup := index (first 1 (where $grouped "color" $color)) 0 }}
 		{{ if $existingGroup }}
-		{{ $grouped = where $grouped "color" "!=" $color | append (merge $existingGroup (dict "pieces" (append (index
+		{{ $filtered := where $grouped "color" "!=" $color }}
+		{{ $updated := merge $existingGroup (dict "pieces" (append (index $existingGroup "pieces") $entry)) }}
+		{{ $grouped = append $filtered $updated }}
 		$existingGroup "pieces") $entry))) }}
 		{{ else }}
 		{{ $grouped = append $grouped (dict "color" $color "pieces" (slice $entry)) }}
