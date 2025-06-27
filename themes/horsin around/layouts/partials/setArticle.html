@@ -1,119 +1,120 @@
 <article>
-	{{ if .Params.description }}
-	<h1>{{ .Params.description }}</h1>
-	{{ end }}
+  {{ if .Params.description }}
+  <h1>{{ .Params.description }}</h1>
+  {{ end }}
 
-	{{ if .Params.pageThumbnailFile }}
-	<div class="instruction-thumbnail">
-		<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
-	</div>
-	{{ else }}
-	<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
-	{{ end }}
+  {{ if .Params.pageThumbnailFile }}
+  <div class="instruction-thumbnail">
+    <img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+  </div>
+  {{ else }}
+  <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+  {{ end }}
 
-	{{ if and (.Params.imageSetName) (ge .Params.imageSetAmount 1) }}
-	<div class="instruction-pages">
-		{{/* Build combined piece totals */}}
-		{{ $allPieces := dict }}
-		{{ $imageSetName := .Params.imageSetName }}
-		{{ $imageSetAmount := .Params.imageSetAmount }}
+  {{ if and (.Params.imageSetName) (ge .Params.imageSetAmount 1) }}
+  <div class="instruction-pages">
+    {{/* Build combined piece totals */}}
+    {{ $allPieces := dict }}
+    {{ $imageSetName := .Params.imageSetName }}
+    {{ $imageSetAmount := .Params.imageSetAmount }}
 
-		{{ range seq 1 (sub $imageSetAmount 1) }}
-		{{ $pageKey := printf "page%dPieces" . }}
-		{{ $pieces := index $.Params $pageKey }}
-		{{ if $pieces }}
-		{{ range $piece := $pieces }}
-		{{ $split := split $piece "|" }}
-		{{ $name := index $split 0 }}
-		{{ $color := index $split 1 }}
-		{{ $count := int (index $split 2) }}
-		{{ $key := printf "%s|%s" $name $color }}
-		{{ $current := default 0 (index $allPieces $key) }}
-		{{ $allPieces = merge $allPieces (dict $key (add $current $count)) }}
-		{{ end }}
-		{{ end }}
-		{{ end }}
+    {{ range seq 1 (sub $imageSetAmount 1) }}
+      {{ $pageKey := printf "page%dPieces" . }}
+      {{ $pieces := index $.Params $pageKey }}
+      {{ if $pieces }}
+        {{ range $piece := $pieces }}
+          {{ $split := split $piece "|" }}
+          {{ $name := index $split 0 }}
+          {{ $color := index $split 1 }}
+          {{ $count := int (index $split 2) }}
+          {{ $key := printf "%s|%s" $name $color }}
+          {{ $current := default 0 (index $allPieces $key) }}
+          {{ $allPieces = merge $allPieces (dict $key (add $current $count)) }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
 
-		{{/* Group pieces by color using map then convert to slice */}}
-		{{ $groupedMap := dict }}
+    {{/* Create a flat slice of all pieces (no grouping) */}}
+    {{ $allEntries := slice }}
+    {{ range $key, $total := $allPieces }}
+      {{ $parts := split $key "|" }}
+      {{ $name := index $parts 0 }}
+      {{ $color := index $parts 1 }}
+      {{ $entry := dict "name" $name "color" $color "count" $total }}
+      {{ $allEntries = $allEntries | append $entry }}
+    {{ end }}
 
-		{{ range $key, $total := $allPieces }}
-		{{ $parts := split $key "|" }}
-		{{ $name := index $parts 0 }}
-		{{ $color := index $parts 1 }}
-		{{ $entry := dict "name" $name "count" $total }}
+    {{/* Get unique colors from allEntries (helper function) */}}
+    {{ $colorsMap := dict }}
+    {{ range $entry := $allEntries }}
+      {{ $colorsMap = merge $colorsMap (dict $entry.color true) }}
+    {{ end }}
 
-		{{ $currentPieces := default (slice) (index $groupedMap $color) }}
-		{{ $updatedPieces := append $currentPieces $entry }}
+    {{ $colors := slice }}
+    {{ range $color, $_ := $colorsMap }}
+      {{ $colors = $colors | append $color }}
+    {{ end }}
 
-		{{ $groupedMap = merge $groupedMap (dict $color $updatedPieces) }}
-		{{ end }}
+    {{/* Page 0 - Summary grouped by color by filtering $allEntries */}}
+    <div class="instruction-page text-summary">
+      <div class="page-number">Page 0</div>
+      <div class="text-piece-summary">
+        {{ range $color := $colors }}
+          <h3 class="color-header" style="--color: {{ $color | lower }}">{{ $color }}:</h3>
+          <ul>
+            {{ range $entry := where $allEntries "color" $color }}
+              {{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $entry.name)) 0 }}
+              <li>
+                {{ if $piecePage }}
+                  <a href="{{ $piecePage.RelPermalink }}">{{ $entry.name }} ({{ $entry.count }}x)</a>
+                {{ else }}
+                  {{ $entry.name }} ({{ $entry.count }}x)
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        {{ end }}
+      </div>
+    </div>
 
-		{{ $grouped := slice }}
-		{{ range $color, $pieces := $groupedMap }}
-		{{ $grouped = append $grouped (dict "color" $color "pieces" $pieces) }}
-		{{ end }}
+    {{/* Instruction Pages 1 to N */}}
+    {{ range seq 1 (sub $imageSetAmount 1) }}
+      {{ $pageNum := . }}
+      {{ $imgPath := printf "/photos/%s%d.avif" $imageSetName $pageNum }}
+      <div class="instruction-page">
+        <div class="page-number">Page {{ $pageNum }}</div>
+        <img src="{{ $imgPath }}" alt="{{ $.Title }}">
 
-		{{/* Page 0 - Summary */}}
-		<div class="instruction-page text-summary">
-			<div class="page-number">Page 0</div>
-			<div class="text-piece-summary">
-				{{ range $grouped }}
-				<h3 class="color-header" style="--color: {{ .color | lower }}">{{ .color }}:</h3>
-				<ul>
-					{{ range .pieces }}
-					{{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" .name)) 0 }}
-					<li>
-						{{ if $piecePage }}
-						<a href="{{ $piecePage.RelPermalink }}">{{ .name }} ({{ .count }}x)</a>
-						{{ else }}
-						{{ .name }} ({{ .count }}x)
-						{{ end }}
-					</li>
-					{{ end }}
-				</ul>
-				{{ end }}
-			</div>
-		</div>
+        {{ $pageKey := printf "page%dPieces" $pageNum }}
+        {{ $pieces := index $.Params $pageKey }}
+        {{ if $pieces }}
+          <div class="piece-box">
+            {{ range $piece := $pieces }}
+              {{ $split := split $piece "|" }}
+              {{ $name := index $split 0 }}
+              {{ $color := index $split 1 }}
+              {{ $count := index $split 2 }}
+              {{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $name)) 0 }}
+              {{ if $piecePage }}
+                <a href="{{ $piecePage.RelPermalink }}">
+                  <div class="piece-entry" style="border-color: {{ $color | lower }}">
+                    <img class="desaturated" src="/photos/{{ $piecePage.Params.pageThumbnailFile }}"
+                      alt="{{ $name }}">
+                    <div class="piece-count">{{ $count }}x</div>
+                  </div>
+                </a>
+              {{ else }}
+                <!-- Missing piece page -->
+              {{ end }}
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+  {{ end }}
 
-		{{/* Instruction Pages 1 to N */}}
-		{{ range seq 1 (sub $imageSetAmount 1) }}
-		{{ $pageNum := . }}
-		{{ $imgPath := printf "/photos/%s%d.avif" $imageSetName $pageNum }}
-		<div class="instruction-page">
-			<div class="page-number">Page {{ $pageNum }}</div>
-			<img src="{{ $imgPath }}" alt="{{ $.Title }}">
-
-			{{ $pageKey := printf "page%dPieces" $pageNum }}
-			{{ $pieces := index $.Params $pageKey }}
-			{{ if $pieces }}
-			<div class="piece-box">
-				{{ range $piece := $pieces }}
-				{{ $split := split $piece "|" }}
-				{{ $name := index $split 0 }}
-				{{ $color := index $split 1 }}
-				{{ $count := index $split 2 }}
-				{{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $name)) 0 }}
-				{{ if $piecePage }}
-				<a href="{{ $piecePage.RelPermalink }}">
-					<div class="piece-entry" style="border-color: {{ $color | lower }}">
-						<img class="desaturated" src="/photos/{{ $piecePage.Params.pageThumbnailFile }}"
-							alt="{{ $name }}">
-						<div class="piece-count">{{ $count }}x</div>
-					</div>
-				</a>
-				{{ else }}
-				<!-- Missing piece page -->
-				{{ end }}
-				{{ end }}
-			</div>
-			{{ end }}
-		</div>
-		{{ end }}
-	</div>
-	{{ end }}
-
-	<div>
-		{{ .Content }}
-	</div>
+  <div>
+    {{ .Content }}
+  </div>
 </article>
