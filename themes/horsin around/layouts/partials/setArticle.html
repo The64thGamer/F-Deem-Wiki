@@ -41,7 +41,7 @@
 		{{ $parts := split $key "|" }}
 		{{ $name := index $parts 0 }}
 		{{ $color := index $parts 1 }}
-		{{ $existing := index $grouped $color | default slice }}
+		{{ $existing := index $grouped $color | default (slice) }}
 		{{ $entry := dict "name" $name "count" $total }}
 		{{ $grouped = merge $grouped (dict $color (append $existing $entry)) }}
 		{{ end }}

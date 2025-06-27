@@ -260,6 +260,61 @@ a {
   border-radius: 0.3em;
   pointer-events: none;
 }
+.instruction-page.text-summary {
+  background: var(--deep-brown);
+  color: var(--white);
+  padding: 2em;
+  border-radius: 1em;
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  max-width: 50em;
+}
+
+.text-piece-summary {
+  padding-top: 1em;
+}
+
+.color-header {
+  margin-top: 1em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--white);
+  background: var(--black);
+  padding: 0.2em 0.6em;
+  border-left: 0.5em solid var(--white);
+  border-radius: 0.3em;
+  display: inline-block;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1));
+  text-shadow: 0 0 0.15em black;
+  border-color: var(--white);
+}
+
+.color-header::before {
+  content: "";
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  background-color: var(--color);
+  border: 0.15em solid var(--white);
+  border-radius: 50%;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+
+.color-header {
+  color: var(--color);
+  border-left-color: var(--color);
+}
+
+.text-piece-summary ul {
+  list-style-type: disc;
+  padding-left: 2em;
+  margin-bottom: 1em;
+}
+
+.text-piece-summary li {
+  margin-bottom: 0.5em;
+}
 
 
 
