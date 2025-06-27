@@ -215,6 +215,48 @@ a {
   font-family: "Eirian";
 }
 
+.piece-box {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.8em;
+  border-radius: 0.8em;
+  max-width: 60%;
+  justify-content: flex-end;
+}
+
+.piece-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0.3em solid;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  background-color: var(--deep-brown);
+  box-shadow: var(--card-shadow);
+  width: 5em;
+}
+
+.piece-entry img.desaturated {
+  width: 100%;
+  height: auto;
+  filter: grayscale(100%);
+  border-radius: 0.3em;
+}
+
+.piece-count {
+  margin-top: 0.3em;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: var(--white);
+  text-align: center;
+}
+
+
 /* ========== Fonts ========== */
 
 @font-face {
