@@ -57,7 +57,7 @@
 
     {{/* Page 0 - Summary grouped by color by filtering $allEntries */}}
     <div class="instruction-page text-summary">
-      <div class="page-number">Page 0</div>
+      <div class="page-number">Page 0 (Parts Count)</div>
       <div class="text-piece-summary">
         {{ range $color := $colors }}
           <h3 class="color-header" style="--color: {{ $color | lower }}">{{ $color }}:</h3>
@@ -66,7 +66,7 @@
               {{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $entry.name)) 0 }}
               <li>
                 {{ if $piecePage }}
-                  <a href="{{ $piecePage.RelPermalink }}">{{ $entry.name }} ({{ $entry.count }}x)</a>
+                  <a href="{{ $piecePage.RelPermalink }}">({{ $entry.count }}x) {{ $entry.name }}</a>
                 {{ else }}
                   {{ $entry.name }} ({{ $entry.count }}x)
                 {{ end }}
@@ -78,7 +78,7 @@
     </div>
 
     {{/* Instruction Pages 1 to N */}}
-    {{ range seq 1 (sub $imageSetAmount 1) }}
+    {{ range seq 0 (sub $imageSetAmount 1) }}
       {{ $pageNum := . }}
       {{ $imgPath := printf "/photos/%s%d.avif" $imageSetName $pageNum }}
       <div class="instruction-page">
