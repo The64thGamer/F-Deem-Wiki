@@ -171,7 +171,6 @@ a {
 
 .instruction-thumbnail {
   position: relative;
-  padding: 2em;
   border-radius: 1em;
   box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
   max-width: 80%;

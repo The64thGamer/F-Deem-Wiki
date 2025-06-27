@@ -3,15 +3,13 @@
 		<h1>{{ .Params.description }}</h1>
 	{{ end }}
 
-	<div class="article-thumbnail">
-		{{ if .Params.pageThumbnailFile }}
-		<div class="instruction-thumbnail">
-			<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
-		</div>
-		{{ else }}
-			<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
-		{{ end }}
+	{{ if .Params.pageThumbnailFile }}
+	<div class="instruction-thumbnail">
+		<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
 	</div>
+	{{ else }}
+		<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+	{{ end }}
 
 	{{ if and (.Params.imageSetName) (ge .Params.imageSetAmount 1) }}
 		<div class="instruction-pages">
