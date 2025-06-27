@@ -35,29 +35,42 @@
 		{{ end }}
 
 		{{/* Render Page 0 - Overview */}}
-		<div class="instruction-page">
-			<div class="page-number">Page 0</div>
-			<div class="piece-box">
-				{{ range $key, $count := $allPieces }}
-				{{ $parts := split $key "|" }}
-				{{ $name := index $parts 0 }}
-				{{ $color := index $parts 1 }}
+		{{/* Group pieces by color */}}
+		{{ $grouped := dict }}
+		{{ range $key, $total := $allPieces }}
+		{{ $parts := split $key "|" }}
+		{{ $name := index $parts 0 }}
+		{{ $color := index $parts 1 }}
+		{{ $existing := index $grouped $color | default slice }}
+		{{ $entry := dict "name" $name "count" $total }}
+		{{ $grouped = merge $grouped (dict $color (append $existing $entry)) }}
+		{{ end }}
 
-				{{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $name)) 0 }}
+		<div class="instruction-page text-summary">
+		<div class="page-number">Page 0</div>
+		<div class="text-piece-summary">
+			{{ range $color, $pieces := $grouped }}
+			<h3 class="color-header" style="--color: {{ $color | lower }}">{{ $color }}:</h3>
+			<ul>
+				{{ range $piece := $pieces }}
+				{{ $piecePage := where $.Site.RegularPages "Title" $piece.name | first }}
 				{{ if $piecePage }}
-				<a href="{{ $piecePage.RelPermalink }}">
-					<div class="piece-entry" style="border-color: {{ $color | lower }}">
-						<img class="desaturated" src="/photos/{{ $piecePage.Params.pageThumbnailFile }}"
-							alt="{{ $name }}">
-						<div class="piece-count">{{ $count }}x</div>
-					</div>
-				</a>
+					<li>
+					<a href="{{ $piecePage.RelPermalink }}">
+						{{ $piece.name }} ({{ $piece.count }}x)
+					</a>
+					</li>
 				{{ else }}
-				<!-- Missing piece page -->
+					<li>
+					{{ $piece.name }} ({{ $piece.count }}x)
+					</li>
 				{{ end }}
 				{{ end }}
-			</div>
+			</ul>
+			{{ end }}
 		</div>
+		</div>
+
 
 		{{/* Render real instruction pages */}}
 		{{ range seq 1 (sub $imageSetAmount 1) }}

@@ -230,31 +230,37 @@ a {
 }
 
 .piece-entry {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  display: block;
   border: 0.3em solid;
   border-radius: 0.5em;
-  padding: 0.5em;
+  width: 3em;
+  overflow: hidden;
   background-color: var(--deep-brown);
   box-shadow: var(--card-shadow);
-  width: 5em;
 }
 
 .piece-entry img.desaturated {
   width: 100%;
   height: auto;
   filter: grayscale(100%);
-  border-radius: 0.3em;
+  display: block;
+  border-radius: 0.2em;
 }
 
 .piece-count {
-  margin-top: 0.3em;
+  position: absolute;
+  bottom: 0.2em;
+  right: 0.2em;
+  font-size: 0.8em;
   font-weight: bold;
-  font-size: 0.9em;
+  background: rgba(0, 0, 0, 0.6);
   color: var(--white);
-  text-align: center;
+  padding: 0.1em 0.4em;
+  border-radius: 0.3em;
+  pointer-events: none;
 }
+
 
 
 /* ========== Fonts ========== */
