@@ -5,14 +5,16 @@
 
 	<div class="article-thumbnail">
 		{{ if .Params.pageThumbnailFile }}
+		<div class="instruction-pages">
 			<img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
+		</div>
 		{{ else }}
 			<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
 		{{ end }}
 	</div>
 
 	{{ if and (.Params.imageSetName) (ge .Params.imageSetAmount 1) }}
-		<div class="instruction-pages">
+		<div class="instruction-thumbnail">
 			{{ $base := .Params.imageSetName }}
 			{{ $count := .Params.imageSetAmount }}
 			{{ range seq 0 (sub $count 1) }}
