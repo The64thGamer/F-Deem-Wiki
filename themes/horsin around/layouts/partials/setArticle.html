@@ -43,7 +43,7 @@
 				{{ $name := index $parts 0 }}
 				{{ $color := index $parts 1 }}
 
-				{{ $piecePage := where $.Site.RegularPages "Title" $name | first }}
+				{{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $name)) 0 }}
 				{{ if $piecePage }}
 				<a href="{{ $piecePage.RelPermalink }}">
 					<div class="piece-entry" style="border-color: {{ $color | lower }}">
@@ -77,7 +77,7 @@
 				{{ $color := index $split 1 }}
 				{{ $count := index $split 2 }}
 
-				{{ $piecePage := where $.Site.RegularPages "Title" $name | first }}
+				{{ $piecePage := index (first 1 (where $.Site.RegularPages "Title" $name)) 0 }}
 				{{ if $piecePage }}
 				<a href="{{ $piecePage.RelPermalink }}">
 					<div class="piece-entry" style="border-color: {{ $color | lower }}">
