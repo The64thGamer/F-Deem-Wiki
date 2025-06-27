@@ -1,6 +1,6 @@
 <article>
   {{ if .Params.description }}
- <h1 style="text-shadow: 0 0 0.15em black;">{{ .Params.description }}</h1>
+  <h1>{{ .Params.description }}</h1>
   {{ end }}
 
   {{ if .Params.pageThumbnailFile }}
@@ -57,7 +57,7 @@
 
     {{/* Page 0 - Summary grouped by color by filtering $allEntries */}}
     <div class="instruction-page text-summary">
-      <div class="page-number">Page 0 (Parts Count)</div>
+      <div class="page-number">Parts Summary</div>
       <div class="text-piece-summary">
         {{ range $color := $colors }}
           <h3 class="color-header" style="--color: {{ $color | lower }}">{{ $color }}:</h3>
