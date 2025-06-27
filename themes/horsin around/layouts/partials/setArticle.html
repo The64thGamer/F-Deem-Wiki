@@ -34,24 +34,24 @@
 		{{ end }}
 		{{ end }}
 
-		{{/* Prepare grouped-by-color data as a slice of dicts */}}
-		{{ $grouped := slice }}
+		{{/* Group pieces by color using map then convert to slice */}}
+		{{ $groupedMap := dict }}
+
 		{{ range $key, $total := $allPieces }}
 		{{ $parts := split $key "|" }}
 		{{ $name := index $parts 0 }}
 		{{ $color := index $parts 1 }}
-		{{ $entry := dict "name" $name "color" $color "count" $total }}
+		{{ $entry := dict "name" $name "count" $total }}
 
-		{{/* Try to find existing color group in $grouped */}}
-		{{ $existingGroup := index (first 1 (where $grouped "color" $color)) 0 }}
-		{{ if $existingGroup }}
-		{{ $filtered := where $grouped "color" "!=" $color }}
-		{{ $updated := merge $existingGroup (dict "pieces" (append (index $existingGroup "pieces") $entry)) }}
-		{{ $grouped = append $filtered $updated }}
-		$existingGroup "pieces") $entry))) }}
-		{{ else }}
-		{{ $grouped = append $grouped (dict "color" $color "pieces" (slice $entry)) }}
+		{{ $currentPieces := default (slice) (index $groupedMap $color) }}
+		{{ $updatedPieces := append $currentPieces $entry }}
+
+		{{ $groupedMap = merge $groupedMap (dict $color $updatedPieces) }}
 		{{ end }}
+
+		{{ $grouped := slice }}
+		{{ range $color, $pieces := $groupedMap }}
+		{{ $grouped = append $grouped (dict "color" $color "pieces" $pieces) }}
 		{{ end }}
 
 		{{/* Page 0 - Summary */}}
