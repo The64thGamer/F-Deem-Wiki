@@ -26,6 +26,7 @@ main {
   margin: auto;
   padding-left: 3em;
   padding-right: 3em;
+  background-color: var(--brown)
 }
 
 header {
