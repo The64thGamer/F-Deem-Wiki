@@ -316,6 +316,39 @@ a {
   margin-bottom: 0.5em;
 }
 
+.navbar-scroll-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollable {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE/Edge */
+}
+.scrollable::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+.scroll-btn {
+  background: var(--brown);
+  color: var(--white);
+  border: none;
+  font-size: 1.2em;
+  padding: 0.5em;
+  cursor: pointer;
+  z-index: 10;
+}
+.scroll-btn.left {
+  margin-right: 0.5em;
+}
+.scroll-btn.right {
+  margin-left: 0.5em;
+}
+
 
 
 /* ========== Fonts ========== */

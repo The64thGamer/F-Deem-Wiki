@@ -1,58 +1,49 @@
-{{- $tagCategories := dict
-"Sizes" (slice "1x1" "1x2" "1x3" "1x4" "1x5" "1x6" "1x7" "1x8" "1x10" "1x12" "1x16" "2x2" "2x3" "2x4" "2x6" "2x8" "2x10"
-"2x12" "2x16" "3x2" "4x4" "4x6" "4x8" "8x8" "8x12" "16x16")
-"Types" (slice "Brick" "Plate" "Storage" "Accessory" "Figure" "Char" "Item" "Discontinued")
-"Shapes" (slice "Rounded" "Ramp" "Cliff" "Debossed" "Out Peg" "In Peg")
-"Themes" (slice "Construction" "Food" "The Scary")
-}}
-
-{{- $site := .Site.RegularPages -}}
-
 <header>
-	<nav class="navbar">
-		<div class="container">
-			<ul class="navbar-menu">
-				<li class="logo">
-					<a href="/"><img src="/photos/Icon.avif" alt="Example render of a Benchy set."></a>
-				</li>
-				<li class="navbar-item dropdown">
-					<a href="https://f-deem.org/" class="navbar-brand">Forum</a>
-				</li>
-				<li class="navbar-item dropdown">
-					<a href="/categories/sets" class="navbar-brand">Sets</a>
-				</li>
-				<li class="navbar-item dropdown">
-					<a href="/categories/piece" class="navbar-brand">All Pieces</a>
-				</li>
-				{{- range $categoryName, $tags := $tagCategories -}}
-				<li class="navbar-item dropdown">
-					<a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
+  <nav class="navbar">
+    <div class="container navbar-scroll-wrapper">
+      <button class="scroll-btn left" onclick="scrollNavbar(-200)">❮</button>
 
-					{{- if $tags -}} <!-- Only render dropdown if there are tags -->
-					<ul class="dropdown-menu">
-						{{- range $tags -}}
-						{{- $tag := . -}}
-						{{- $count := 0 -}}
+      <ul class="navbar-menu scrollable" id="scrollable-navbar">
+        <li class="logo">
+          <a href="/"><img src="/photos/Icon.avif" alt="Logo"></a>
+        </li>
+        <li class="navbar-item dropdown"><a href="https://f-deem.org/" class="navbar-brand">Forum</a></li>
+        <li class="navbar-item dropdown"><a href="/categories/sets" class="navbar-brand">Sets</a></li>
+        <li class="navbar-item dropdown"><a href="/categories/piece" class="navbar-brand">All Pieces</a></li>
 
-						<!-- Count pages with the current tag -->
-						{{- range $site -}}
-						{{- if in .Params.tags $tag -}}
-						{{- $count = add $count 1 -}}
-						{{- end -}}
-						{{- end -}}
+        {{ range $categoryName, $tags := $tagCategories }}
+        <li class="navbar-item dropdown">
+          <a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
+          {{ if $tags }}
+          <ul class="dropdown-menu">
+            {{ range $tags }}
+              {{ $tag := . }}
+              {{ $count := 0 }}
+              {{ range $site }}
+                {{ if in .Params.tags $tag }}
+                  {{ $count = add $count 1 }}
+                {{ end }}
+              {{ end }}
+              {{ $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize }}
+              <li>
+                <a href="{{ "tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
+                  {{ $tag }}<sup>({{ $count }})</sup>
+                </a>
+              </li>
+            {{ end }}
+          </ul>
+          {{ end }}
+        </li>
+        {{ end }}
+      </ul>
 
-						{{- $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize -}}
-						<li>
-							<a href="{{ "tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
-								{{- $tag -}}<sup>({{- $count -}})</sup>
-							</a>
-						</li>
-						{{- end -}}
-					</ul>
-					{{- end -}}
-				</li>
-				{{- end -}}
-			</ul>
-		</div>
-	</nav>
+      <button class="scroll-btn right" onclick="scrollNavbar(200)">❯</button>
+    </div>
+  </nav>
 </header>
+<script>
+  function scrollNavbar(amount) {
+    const navbar = document.getElementById('scrollable-navbar');
+    navbar.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+</script>
