@@ -10,29 +10,34 @@
 
 <header>
   <nav class="navbar">
-    <div class="container navbar-scroll-wrapper">
-      <button class="scroll-btn left" onclick="scrollNavbar(-200)">❮</button>
+    <div class="container navbar-layout">
+      
+      <!-- Logo stays fixed left -->
+      <div class="logo">
+        <a href="/"><img src="/photos/Icon.avif" alt="Logo"></a>
+      </div>
 
-      <ul class="navbar-menu scrollable" id="scrollable-navbar">
-        <li class="logo">
-          <a href="/"><img src="/photos/Icon.avif" alt="Logo"></a>
-        </li>
-        <li class="navbar-item dropdown"><a href="https://f-deem.org/" class="navbar-brand">Forum</a></li>
-        <li class="navbar-item dropdown"><a href="/categories/sets" class="navbar-brand">Sets</a></li>
-        <li class="navbar-item dropdown"><a href="/categories/piece" class="navbar-brand">All Pieces</a></li>
+      <!-- Scroll controls and navbar -->
+      <div class="navbar-scroll-container">
+        <button class="scroll-btn left" onclick="scrollNavbar(-200)" id="scroll-left">❮</button>
 
-        {{ range $categoryName, $tags := $tagCategories }}
-        <li class="navbar-item dropdown">
-          <a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
-          {{ if $tags }}
-          <ul class="dropdown-menu">
-            {{ range $tags }}
+        <ul class="navbar-menu scrollable" id="scrollable-navbar">
+          <li class="navbar-item dropdown"><a href="https://f-deem.org/" class="navbar-brand">Forum</a></li>
+          <li class="navbar-item dropdown"><a href="/categories/sets" class="navbar-brand">Sets</a></li>
+          <li class="navbar-item dropdown"><a href="/categories/piece" class="navbar-brand">All Pieces</a></li>
+
+          {{ range $categoryName, $tags := $tagCategories }}
+          <li class="navbar-item dropdown">
+            <a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
+            {{ if $tags }}
+            <ul class="dropdown-menu">
+              {{ range $tags }}
               {{ $tag := . }}
               {{ $count := 0 }}
               {{ range $site }}
-                {{ if in .Params.tags $tag }}
-                  {{ $count = add $count 1 }}
-                {{ end }}
+              {{ if in .Params.tags $tag }}
+              {{ $count = add $count 1 }}
+              {{ end }}
               {{ end }}
               {{ $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize }}
               <li>
@@ -40,20 +45,36 @@
                   {{ $tag }}<sup>({{ $count }})</sup>
                 </a>
               </li>
+              {{ end }}
+            </ul>
             {{ end }}
-          </ul>
+          </li>
           {{ end }}
-        </li>
-        {{ end }}
-      </ul>
+        </ul>
 
-      <button class="scroll-btn right" onclick="scrollNavbar(200)">❯</button>
+        <button class="scroll-btn right" onclick="scrollNavbar(200)" id="scroll-right">❯</button>
+      </div>
     </div>
   </nav>
 </header>
+
 <script>
+  const navbar = document.getElementById('scrollable-navbar');
+  const leftBtn = document.getElementById('scroll-left');
+  const rightBtn = document.getElementById('scroll-right');
+
   function scrollNavbar(amount) {
-    const navbar = document.getElementById('scrollable-navbar');
     navbar.scrollBy({ left: amount, behavior: 'smooth' });
   }
+
+  function updateScrollButtons() {
+    const scrollLeft = navbar.scrollLeft;
+    const scrollMax = navbar.scrollWidth - navbar.clientWidth;
+    leftBtn.style.display = scrollLeft > 0 ? 'inline-block' : 'none';
+    rightBtn.style.display = scrollLeft < scrollMax - 1 ? 'inline-block' : 'none';
+  }
+
+  navbar.addEventListener('scroll', updateScrollButtons);
+  window.addEventListener('resize', updateScrollButtons);
+  window.addEventListener('DOMContentLoaded', updateScrollButtons);
 </script>
