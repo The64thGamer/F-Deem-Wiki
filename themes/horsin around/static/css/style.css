@@ -390,4 +390,31 @@ ul {
 
 /* ========== Responsive ========== */
 
+@media (max-width: 900px) {
+  header {
+    font-size: 0.7em;
+  }
+}
 
+@media (max-width: 650px) {
+  main {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  html, body {
+    font-size: 1.25em;
+  }
+
+  header {
+    font-size: 0.5em;
+  }
+
+  .navbar {
+    padding: 1em 0em;
+  }
+
+  .navbar-menu {
+    margin: 0em 0.25em;
+  }
+}
