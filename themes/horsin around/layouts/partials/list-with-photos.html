@@ -25,11 +25,11 @@
 {{ end }}
 
 <div class="filter-controls">
-  {{ range $key, $values := $tagCategories }}
-    <label for="filter-{{ $key | urlize }}">{{ $key }}:</label>
-    <select id="filter-{{ $key | urlize }}" data-filter-key="{{ $key }}">
-      <option value="all">All {{ $key }}</option>
-      {{ range $values }}
+  {{ range $group, $tags := $tagCategories }}
+    <label for="filter-{{ $group | urlize }}">{{ $group }}:</label>
+    <select id="filter-{{ $group | urlize }}" class="tag-filter" data-group="{{ $group | urlize }}">
+      <option value="all">All {{ $group }}</option>
+      {{ range $tags }}
         <option value="{{ . | urlize }}">{{ . }}</option>
       {{ end }}
     </select>
@@ -63,17 +63,37 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const sortSelect = document.getElementById("sort-select");
-  const tagFilter = document.getElementById("tag-filter");
   const gallery = document.getElementById("gallery");
+  const sortSelect = document.getElementById("sort-select");
+  const tagFilters = document.querySelectorAll(".tag-filter");
+
+  function getActiveTagFilters() {
+    const filters = {};
+    tagFilters.forEach(select => {
+      const group = select.dataset.group;
+      const value = select.value;
+      if (value !== "all") {
+        filters[group] = value;
+      }
+    });
+    return filters;
+  }
 
   function filterGallery() {
-    const selectedTag = tagFilter.value;
+    const activeFilters = getActiveTagFilters();
     const items = gallery.querySelectorAll(".gallery-item");
 
     items.forEach(item => {
-      const tags = item.dataset.tags?.split(",") || [];
-      const show = (selectedTag === "all" || tags.includes(selectedTag));
+      const tags = (item.dataset.tags || "").split(",");
+      let show = true;
+
+      for (const [group, tag] of Object.entries(activeFilters)) {
+        if (!tags.includes(tag)) {
+          show = false;
+          break;
+        }
+      }
+
       item.style.display = show ? "" : "none";
     });
   }
@@ -94,16 +114,19 @@ document.addEventListener("DOMContentLoaded", () => {
     sorted.forEach(item => gallery.appendChild(item));
   }
 
-  tagFilter.addEventListener("change", () => {
-    filterGallery();
-    sortGallery(sortSelect.value);
+  // Event listeners
+  tagFilters.forEach(select => {
+    select.addEventListener("change", () => {
+      filterGallery();
+      sortGallery(sortSelect.value);
+    });
   });
 
   sortSelect.addEventListener("change", () => {
     sortGallery(sortSelect.value);
   });
 
-  // Initialize on page load
+  // Initial run
   filterGallery();
   sortGallery(sortSelect.value);
 });
