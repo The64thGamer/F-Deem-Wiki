@@ -101,28 +101,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  function sortGallery(mode) {
-    const items = Array.from(gallery.querySelectorAll(".gallery-item"))
-      .filter(item => item.style.display !== "none");
+function sortGallery(mode) {
+  const items = Array.from(gallery.querySelectorAll(".gallery-item"))
+    .filter(item => item.style.display !== "none");
 
-    const sorted = items.sort((a, b) => {
-      if (mode === "date") {
-        return new Date(b.dataset.date || "1970-01-01") - new Date(a.dataset.date || "1970-01-01");
-      } else {
-        return (a.dataset.title || "").localeCompare(b.dataset.title || "");
-      }
-    });
-
-    gallery.innerHTML = "";
-    sorted.forEach(item => gallery.appendChild(item));
-  }
-
-  tagFilters.forEach(select => {
-    select.addEventListener("change", () => {
-      filterGallery();
-      sortGallery(sortSelect.value);
-    });
+  const sorted = items.sort((a, b) => {
+    if (mode === "date") {
+      return new Date(b.dataset.date || "1970-01-01") - new Date(a.dataset.date || "1970-01-01");
+    } else {
+      return (a.dataset.title || "").localeCompare(b.dataset.title || "");
+    }
   });
+
+  // Clear only visible items, not the whole gallery
+  sorted.forEach(item => gallery.appendChild(item));
+}
+
+
+tagFilters.forEach(select => {
+  select.addEventListener("change", () => {
+    filterGallery();                  // filters items
+    sortGallery(sortSelect.value);   // only affects filtered items
+  });
+});
+
 
   sortSelect.addEventListener("change", () => {
     sortGallery(sortSelect.value);
