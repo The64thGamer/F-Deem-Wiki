@@ -11,13 +11,13 @@
 <header>
   <nav class="navbar">
     <div class="container navbar-layout">
-      
-      <!-- Logo stays fixed left -->
+
+      <!-- Logo fixed left -->
       <div class="logo">
         <a href="/"><img src="/photos/Icon.avif" alt="Logo"></a>
       </div>
 
-      <!-- Scroll controls and navbar -->
+      <!-- Scrollable navbar with buttons -->
       <div class="navbar-scroll-container">
         <button class="scroll-btn left" onclick="scrollNavbar(-200)" id="scroll-left">❮</button>
 
@@ -67,20 +67,23 @@
     navbar.scrollBy({ left: amount, behavior: 'smooth' });
   }
 
-function updateScrollButtons() {
-  const scrollLeft = Math.ceil(navbar.scrollLeft);
-  const scrollWidth = navbar.scrollWidth;
-  const clientWidth = navbar.clientWidth;
+  function updateScrollButtons() {
+    const scrollLeft = Math.ceil(navbar.scrollLeft);
+    const scrollWidth = navbar.scrollWidth;
+    const clientWidth = navbar.clientWidth;
 
-  const atStart = scrollLeft <= 0;
-  const atEnd = scrollLeft >= scrollWidth - clientWidth - 1; // buffer of 1px
+    const atStart = scrollLeft <= 0;
+    const atEnd = scrollLeft >= scrollWidth - clientWidth - 1;
 
-  leftBtn.style.display = atStart ? 'none' : 'inline-block';
-  rightBtn.style.display = atEnd ? 'none' : 'inline-block';
-}
+    leftBtn.style.display = atStart ? 'none' : 'inline-block';
+    rightBtn.style.display = atEnd ? 'none' : 'inline-block';
+  }
 
+  // Prevent over-scroll snapping back glitch
+  navbar.addEventListener('scroll', () => {
+    requestAnimationFrame(updateScrollButtons);
+  });
 
-  navbar.addEventListener('scroll', updateScrollButtons);
   window.addEventListener('resize', updateScrollButtons);
   window.addEventListener('DOMContentLoaded', updateScrollButtons);
 </script>
