@@ -82,39 +82,27 @@ a {
   position: relative;
   align-content: center;
 }
+
 .navbar-item:hover .dropdown-menu {
   display: block;
 }
 
-.dropdown-container {
+.dropdown-menu {
+  display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
-  z-index: 1000;
-  pointer-events: none; /* So dropdowns don't block hover unless open */
-}
-
-.dropdown-menu {
-  display: none;
   background-color: #444;
   list-style: none;
   margin: 0;
   padding: 1em 0;
   box-shadow: 0 1em 2em rgba(0, 0, 0, 0.2);
-  pointer-events: auto;
-  z-index: 1000;
 }
 
 .dropdown-menu li {
   padding: 0.25em 1em;
   font-family: "Eirian";
   font-size: 1em;
-}
-
-
-.dropdown-menu li:hover {
-  background-color: #555;
 }
 
 .sort-controls {
