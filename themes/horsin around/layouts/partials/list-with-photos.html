@@ -38,13 +38,18 @@
 
 
 <div class="gallery-container" id="gallery">
-  {{ range .Pages }}
-    <div class="gallery-item"
-     data-title="{{ .Title | lower }}"
-     data-date="{{ .Params.startDate }}"
-     {{ range $key, $values := $tagCategories }}
-       data-{{ $key | urlize }}="{{ index .Params (lower $key) | urlize }}"
-     {{ end }}>
+{{ range .Pages }}
+  {{ $page := . }}
+  <div class="gallery-item"
+       data-title="{{ $page.Title | lower }}"
+       data-date="{{ $page.Params.startDate }}"
+       {{ range $key, $values := $tagCategories }}
+         {{ $paramKey := lower $key }}
+         {{ with index $page.Params $paramKey }}
+           data-{{ $key | urlize }}="{{ . | urlize }}"
+         {{ end }}
+       {{ end }}>
+
 
       <div class="gallery-picture">
         <a href="{{ .RelPermalink }}">
