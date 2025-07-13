@@ -25,16 +25,17 @@
 {{ end }}
 
 <div class="filter-controls">
-  {{ range $key, $values := $tagCategories }}
-    <label for="filter-{{ $key | urlize }}">{{ $key }}:</label>
-    <select id="filter-{{ $key | urlize }}" data-filter-key="{{ $key }}">
-      <option value="all">All {{ $key }}</option>
+  <label for="tag-filter">Filter by tag:</label>
+  <select id="tag-filter">
+    <option value="all">All Tags</option>
+    {{ range $key, $values := $tagCategories }}
       {{ range $values }}
         <option value="{{ . | urlize }}">{{ . }}</option>
       {{ end }}
-    </select>
-  {{ end }}
+    {{ end }}
+  </select>
 </div>
+
 
 
 <div class="gallery-container" id="gallery">
@@ -43,95 +44,66 @@
   <div class="gallery-item"
        data-title="{{ $page.Title | lower }}"
        data-date="{{ $page.Params.startDate }}"
-       {{ range $key, $values := $tagCategories }}
-         {{ $paramKey := lower $key }}
-         {{ with index $page.Params $paramKey }}
-           data-{{ $key | urlize }}="{{ . | urlize }}"
-         {{ end }}
-       {{ end }}>
-
-
-      <div class="gallery-picture">
-        <a href="{{ .RelPermalink }}">
-          {{ if .Params.pageThumbnailFile }}
-            <img src="/photos/{{ .Params.pageThumbnailFile }}" alt="{{ .Title }}">
-          {{ else }}
-            <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
-          {{ end }}
-        </a>
-      </div>
-      <div class="gallery-link">
-        <a href="{{ .RelPermalink }}">{{ .Title | truncate 17 "..." }}</a>
-      </div>
+       data-tags="{{ delimit (apply $page.Params.tags "urlize" ".") "," }}">
+       
+    <div class="gallery-picture">
+      <a href="{{ $page.RelPermalink }}">
+        {{ if $page.Params.pageThumbnailFile }}
+          <img src="/photos/{{ $page.Params.pageThumbnailFile }}" alt="{{ $page.Title }}">
+        {{ else }}
+          <img src="/photos/File Not Found.jpg" alt="{{ $page.Title }}">
+        {{ end }}
+      </a>
     </div>
-  {{ end }}
+    <div class="gallery-link">
+      <a href="{{ $page.RelPermalink }}">{{ $page.Title | truncate 17 "..." }}</a>
+    </div>
+  </div>
+{{ end }}
 </div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const sortSelect = document.getElementById("sort-select");
-  const filterSelects = document.querySelectorAll(".filter-controls select");
+  const tagFilter = document.getElementById("tag-filter");
   const gallery = document.getElementById("gallery");
 
   function filterGallery() {
-    const filters = {};
-    filterSelects.forEach(select => {
-      const key = select.dataset.filterKey.toLowerCase();
-      const value = select.value;
-      if (value !== "all") {
-        filters[key] = value;
-      }
-    });
-
+    const selectedTag = tagFilter.value;
     const items = gallery.querySelectorAll(".gallery-item");
+
     items.forEach(item => {
-      let show = true;
-      for (const [key, value] of Object.entries(filters)) {
-        const itemValue = item.dataset[key];
-        if (!itemValue || itemValue !== value) {
-          show = false;
-          break;
-        }
-      }
+      const tags = item.dataset.tags?.split(",") || [];
+      const show = (selectedTag === "all" || tags.includes(selectedTag));
       item.style.display = show ? "" : "none";
     });
   }
 
   function sortGallery(mode) {
     const items = Array.from(gallery.querySelectorAll(".gallery-item"))
-      .filter(item => item.style.display !== "none"); // sort only visible items
+      .filter(item => item.style.display !== "none");
 
     const sorted = items.sort((a, b) => {
       if (mode === "date") {
-        const dateA = new Date(a.dataset.date || "1970-01-01");
-        const dateB = new Date(b.dataset.date || "1970-01-01");
-        return dateA - dateB;
+        return new Date(b.dataset.date || "1970-01-01") - new Date(a.dataset.date || "1970-01-01");
       } else {
-        const titleA = a.dataset.title || "";
-        const titleB = b.dataset.title || "";
-        return titleA.localeCompare(titleB);
+        return (a.dataset.title || "").localeCompare(b.dataset.title || "");
       }
     });
 
     gallery.innerHTML = "";
-    if (mode === "date") {
-      sorted.reverse();
-    }
     sorted.forEach(item => gallery.appendChild(item));
   }
+
+  tagFilter.addEventListener("change", () => {
+    filterGallery();
+    sortGallery(sortSelect.value);
+  });
 
   sortSelect.addEventListener("change", () => {
     sortGallery(sortSelect.value);
   });
 
-  filterSelects.forEach(select => {
-    select.addEventListener("change", () => {
-      filterGallery();
-      sortGallery(sortSelect.value);
-    });
-  });
-
-  // Initialize
+  // Initialize on page load
   filterGallery();
   sortGallery(sortSelect.value);
 });
