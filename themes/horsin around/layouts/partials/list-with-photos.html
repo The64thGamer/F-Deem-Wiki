@@ -89,16 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (Object.keys(activeFilters).length === 0) return;
 
     // Hide items that don't match all filters
-items.forEach(item => {
-  const tags = (item.dataset.tags || "").split(",");
-  console.log("Item Tags:", tags);
+    items.forEach(item => {
+      const tags = (item.dataset.tags || "").split(",");
+      console.log("Item Tags:", tags);
 
-  const matchesAll = Object.values(activeFilters).every(tag =>
-    tags.includes(tag)
-  );
+      const matchesAll = Object.values(activeFilters).every(tag =>
+        tags.includes(tag)
+      );
 
-  item.style.display = matchesAll ? "" : "none";
-});
+      item.style.display = matchesAll ? "" : "none";
+    });
+  }
 
 
   function sortGallery(mode) {
