@@ -7,101 +7,95 @@
 }}
 
 {{- $site := .Site.RegularPages -}}
+<div class="navbar-scroll-container">
+  <button class="scroll-btn left" onclick="scrollNavbar(-200)" id="scroll-left">❮</button>
 
-<header>
-  <nav class="navbar">
-    <div class="container navbar-layout">
-      
-      <!-- Logo stays fixed left -->
-      <div class="logo">
-        <a href="/"><img src="/photos/Icon.avif" alt="Logo"></a>
-      </div>
+  <ul class="navbar-menu scrollable" id="scrollable-navbar">
+    <li class="navbar-item dropdown"><a href="https://f-deem.org/" class="navbar-brand">Forum</a></li>
+    <li class="navbar-item dropdown"><a href="/categories/sets" class="navbar-brand">Sets</a></li>
+    <li class="navbar-item dropdown"><a href="/categories/piece" class="navbar-brand">All Pieces</a></li>
 
-      <!-- Scroll controls and navbar -->
-      <div class="navbar-scroll-container">
-        <button class="scroll-btn left" onclick="scrollNavbar(-200)" id="scroll-left">❮</button>
+    {{ range $categoryName, $tags := $tagCategories }}
+    <li class="navbar-item dropdown" data-dropdown="{{ $categoryName | urlize }}">
+      <a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
+    </li>
+    {{ end }}
+  </ul>
 
-        <ul class="navbar-menu scrollable" id="scrollable-navbar">
-          <li class="navbar-item dropdown"><a href="https://f-deem.org/" class="navbar-brand">Forum</a></li>
-          <li class="navbar-item dropdown"><a href="/categories/sets" class="navbar-brand">Sets</a></li>
-          <li class="navbar-item dropdown"><a href="/categories/piece" class="navbar-brand">All Pieces</a></li>
+  <button class="scroll-btn right" onclick="scrollNavbar(200)" id="scroll-right">❯</button>
+</div>
 
-          {{ range $categoryName, $tags := $tagCategories }}
-          <li class="navbar-item dropdown">
-            <a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
-            {{ if $tags }}
-<div class="dropdown-menu"></div>
-              {{ range $tags }}
-              {{ $tag := . }}
-              {{ $count := 0 }}
-              {{ range $site }}
-              {{ if in .Params.tags $tag }}
-              {{ $count = add $count 1 }}
-              {{ end }}
-              {{ end }}
-              {{ $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize }}
-              <li>
-                <a href="{{ "tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
-                  {{ $tag }}<sup>({{ $count }})</sup>
-                </a>
-              </li>
-              {{ end }}
-            </ul>
-            {{ end }}
-          </li>
-          {{ end }}
-        </ul>
-
-        <button class="scroll-btn right" onclick="scrollNavbar(200)" id="scroll-right">❯</button>
-      </div>
-    </div>
-  </nav>
-</header>
+<!-- Render dropdowns outside the scrollable menu -->
+<div class="dropdown-container">
+  {{ range $categoryName, $tags := $tagCategories }}
+  <ul class="dropdown-menu" id="dropdown-{{ $categoryName | urlize }}">
+    {{ range $tags }}
+    {{ $tag := . }}
+    {{ $count := 0 }}
+    {{ range $site }}
+    {{ if in .Params.tags $tag }}
+    {{ $count = add $count 1 }}
+    {{ end }}
+    {{ end }}
+    {{ $tagFix := $tag | replaceRE "[ &,-]" "-" | urlize }}
+    <li>
+      <a href="{{ "tags/" | relLangURL }}{{ $tagFix }}" title="All pages with tag {{ $tag }}">
+        {{ $tag }}<sup>({{ $count }})</sup>
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+  {{ end }}
+</div>
 
 <script>
-const navbar = document.getElementById('scrollable-navbar');
-const leftBtn = document.getElementById('scroll-left');
-const rightBtn = document.getElementById('scroll-right');
+  const navbar = document.getElementById('scrollable-navbar');
+  const leftBtn = document.getElementById('scroll-left');
+  const rightBtn = document.getElementById('scroll-right');
+  const dropdowns = document.querySelectorAll('.navbar-item.dropdown');
 
-function scrollNavbar(amount) {
-  navbar.scrollBy({ left: amount, behavior: 'smooth' });
-}
+  function scrollNavbar(amount) {
+    navbar.scrollBy({ left: amount, behavior: 'smooth' });
+  }
 
-function updateScrollButtons() {
-  const scrollLeft = Math.ceil(navbar.scrollLeft);
-  const scrollWidth = navbar.scrollWidth;
-  const clientWidth = navbar.clientWidth;
+  function updateScrollButtons() {
+    const scrollLeft = Math.ceil(navbar.scrollLeft);
+    const scrollWidth = navbar.scrollWidth;
+    const clientWidth = navbar.clientWidth;
 
-  const atStart = scrollLeft <= 0;
-  const atEnd = scrollLeft >= scrollWidth - clientWidth - 1;
+    const atStart = scrollLeft <= 0;
+    const atEnd = scrollLeft >= scrollWidth - clientWidth - 1;
 
-  leftBtn.style.display = atStart ? 'none' : 'inline-block';
-  rightBtn.style.display = atEnd ? 'none' : 'inline-block';
-}
+    leftBtn.style.display = atStart ? 'none' : 'inline-block';
+    rightBtn.style.display = atEnd ? 'none' : 'inline-block';
+  }
 
-// Attach listeners
-navbar.addEventListener('scroll', updateScrollButtons);
-window.addEventListener('resize', updateScrollButtons);
-window.addEventListener('DOMContentLoaded', updateScrollButtons);
+  navbar.addEventListener('scroll', updateScrollButtons);
+  window.addEventListener('resize', updateScrollButtons);
+  window.addEventListener('DOMContentLoaded', updateScrollButtons);
 
-// Handle dropdown positioning
-document.querySelectorAll('.navbar-item.dropdown').forEach(item => {
-  const link = item.querySelector('.dropdown-toggle');
-  const dropdown = item.querySelector('.dropdown-menu');
+  // Position dropdowns on hover
+  dropdowns.forEach(item => {
+    const id = item.getAttribute('data-dropdown');
+    const menu = document.getElementById(`dropdown-${id}`);
 
-  if (!link || !dropdown) return;
+    item.addEventListener('mouseenter', () => {
+      const rect = item.getBoundingClientRect();
+      menu.style.display = 'block';
+      menu.style.position = 'absolute';
+      menu.style.top = rect.bottom + 'px';
+      menu.style.left = rect.left + 'px';
+    });
 
-  item.addEventListener('mouseenter', () => {
-    const rect = link.getBoundingClientRect();
-    dropdown.style.display = 'block';
-    dropdown.style.position = 'fixed';
-    dropdown.style.top = `${rect.bottom}px`;
-    dropdown.style.left = `${rect.left}px`;
-    dropdown.style.zIndex = 1000;
+    item.addEventListener('mouseleave', () => {
+      setTimeout(() => menu.style.display = 'none', 200);
+    });
+
+    menu.addEventListener('mouseenter', () => {
+      menu.style.display = 'block';
+    });
+    menu.addEventListener('mouseleave', () => {
+      menu.style.display = 'none';
+    });
   });
-
-  item.addEventListener('mouseleave', () => {
-    dropdown.style.display = 'none';
-  });
-});
 </script>
