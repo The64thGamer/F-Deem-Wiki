@@ -72,8 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tagFilters.forEach(select => {
       const group = select.dataset.group;
       const value = select.value;
+      // Only store filter if it's not "all"
       if (value !== "all") {
-        filters[group] = value;
+        filters[group] = value; // Only ONE value per group
       }
     });
     return filters;
@@ -85,14 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     items.forEach(item => {
       const tags = (item.dataset.tags || "").split(",");
-      let show = true;
-
-      for (const [group, tag] of Object.entries(activeFilters)) {
-        if (!tags.includes(tag)) {
-          show = false;
-          break;
-        }
-      }
+      // Check if every active filter matches at least one tag
+      const show = Object.values(activeFilters).every(filterTag =>
+        tags.includes(filterTag)
+      );
 
       item.style.display = show ? "" : "none";
     });
