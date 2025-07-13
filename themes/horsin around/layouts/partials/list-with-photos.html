@@ -25,17 +25,16 @@
 {{ end }}
 
 <div class="filter-controls">
-  <label for="tag-filter">Filter by tag:</label>
-  <select id="tag-filter">
-    <option value="all">All Tags</option>
-    {{ range $key, $values := $tagCategories }}
+  {{ range $key, $values := $tagCategories }}
+    <label for="filter-{{ $key | urlize }}">{{ $key }}:</label>
+    <select id="filter-{{ $key | urlize }}" data-filter-key="{{ $key }}">
+      <option value="all">All {{ $key }}</option>
       {{ range $values }}
         <option value="{{ . | urlize }}">{{ . }}</option>
       {{ end }}
-    {{ end }}
-  </select>
+    </select>
+  {{ end }}
 </div>
-
 
 
 <div class="gallery-container" id="gallery">
@@ -61,6 +60,7 @@
   </div>
 {{ end }}
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const sortSelect = document.getElementById("sort-select");
