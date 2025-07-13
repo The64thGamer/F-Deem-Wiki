@@ -60,7 +60,6 @@
   </div>
 {{ end }}
 </div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const gallery = document.getElementById("gallery");
@@ -72,9 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
     tagFilters.forEach(select => {
       const group = select.dataset.group;
       const value = select.value;
-      // Only store filter if it's not "all"
       if (value !== "all") {
-        filters[group] = value; // Only ONE value per group
+        filters[group] = value;
       }
     });
     return filters;
@@ -84,14 +82,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeFilters = getActiveTagFilters();
     const items = gallery.querySelectorAll(".gallery-item");
 
+    // Reset all items
+    items.forEach(item => item.style.display = "");
+
+    // No filters active? Show all
+    if (Object.keys(activeFilters).length === 0) return;
+
+    // Hide items that don't match all filters
     items.forEach(item => {
       const tags = (item.dataset.tags || "").split(",");
-      // Check if every active filter matches at least one tag
-      const show = Object.values(activeFilters).every(filterTag =>
-        tags.includes(filterTag)
+      const matchesAll = Object.values(activeFilters).every(tag =>
+        tags.includes(tag)
       );
-
-      item.style.display = show ? "" : "none";
+      item.style.display = matchesAll ? "" : "none";
     });
   }
 
@@ -111,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sorted.forEach(item => gallery.appendChild(item));
   }
 
-  // Event listeners
   tagFilters.forEach(select => {
     select.addEventListener("change", () => {
       filterGallery();
