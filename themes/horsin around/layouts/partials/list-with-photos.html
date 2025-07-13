@@ -1,3 +1,13 @@
+{{- $tagCategories := dict
+"Sizes" (slice "1x1" "1x2" "1x3" "1x4" "1x5" "1x6" "1x7" "1x8" "1x10" "1x12" "1x16" "2x2" "2x3" "2x4" "2x6" "2x8" "2x10"
+"2x12" "2x16" "3x2" "4x4" "4x6" "4x8" "8x8" "8x12" "16x16")
+"Types" (slice "Brick" "Plate" "Storage" "Accessory" "Figure" "Char" "Item" "Discontinued")
+"Shapes" (slice "Rounded" "Ramp" "Cliff" "Debossed" "Out Peg" "In Peg")
+"Themes" (slice "Construction" "Food" "The Scary")
+}}
+
+{{- $site := .Site.RegularPages -}}
+
 {{ $listtitle := .Title }}
 {{ $counts := len .Pages }}
 {{ if or .Title .Content }}
@@ -14,13 +24,28 @@
 </div>
 {{ end }}
 
+<div class="filter-controls">
+  {{ range $key, $values := $tagCategories }}
+    <label for="filter-{{ $key | urlize }}">{{ $key }}:</label>
+    <select id="filter-{{ $key | urlize }}" data-filter-key="{{ $key }}">
+      <option value="all">All {{ $key }}</option>
+      {{ range $values }}
+        <option value="{{ . | urlize }}">{{ . }}</option>
+      {{ end }}
+    </select>
+  {{ end }}
+</div>
 
 
 <div class="gallery-container" id="gallery">
   {{ range .Pages }}
     <div class="gallery-item"
-         data-title="{{ .Title | lower }}"
-         data-date="{{ .Params.startDate }}">
+     data-title="{{ .Title | lower }}"
+     data-date="{{ .Params.startDate }}"
+     {{ range $key, $values := $tagCategories }}
+       data-{{ $key | urlize }}="{{ index .Params (lower $key) | urlize }}"
+     {{ end }}>
+
       <div class="gallery-picture">
         <a href="{{ .RelPermalink }}">
           {{ if .Params.pageThumbnailFile }}
@@ -37,40 +62,72 @@
   {{ end }}
 </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const sortSelect = document.getElementById("sort-select");
-      const gallery = document.getElementById("gallery");
-    
-      function sortGallery(mode) {
-        const items = Array.from(gallery.querySelectorAll(".gallery-item"));
-    
-        const sorted = items.sort((a, b) => {
-          if (mode === "date") {
-            const dateA = new Date(a.dataset.date || "1970-01-01");
-            const dateB = new Date(b.dataset.date || "1970-01-01");
-            return dateA - dateB;
-          } else {
-            const titleA = a.dataset.title || "";
-            const titleB = b.dataset.title || "";
-            return titleA.localeCompare(titleB);
-          }
-        });
-    
-        // Clear and re-add items
-        gallery.innerHTML = "";
-        if (mode === "date") {
-          sorted.reverse();
-        }
-        sorted.forEach(item => gallery.appendChild(item));
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sortSelect = document.getElementById("sort-select");
+  const filterSelects = document.querySelectorAll(".filter-controls select");
+  const gallery = document.getElementById("gallery");
+
+  function filterGallery() {
+    const filters = {};
+    filterSelects.forEach(select => {
+      const key = select.dataset.filterKey.toLowerCase();
+      const value = select.value;
+      if (value !== "all") {
+        filters[key] = value;
       }
-    
-      sortSelect.addEventListener("change", (e) => {
-        sortGallery(e.target.value);
-      });
-    
-      // Run default sort
+    });
+
+    const items = gallery.querySelectorAll(".gallery-item");
+    items.forEach(item => {
+      let show = true;
+      for (const [key, value] of Object.entries(filters)) {
+        const itemValue = item.dataset[key];
+        if (!itemValue || itemValue !== value) {
+          show = false;
+          break;
+        }
+      }
+      item.style.display = show ? "" : "none";
+    });
+  }
+
+  function sortGallery(mode) {
+    const items = Array.from(gallery.querySelectorAll(".gallery-item"))
+      .filter(item => item.style.display !== "none"); // sort only visible items
+
+    const sorted = items.sort((a, b) => {
+      if (mode === "date") {
+        const dateA = new Date(a.dataset.date || "1970-01-01");
+        const dateB = new Date(b.dataset.date || "1970-01-01");
+        return dateA - dateB;
+      } else {
+        const titleA = a.dataset.title || "";
+        const titleB = b.dataset.title || "";
+        return titleA.localeCompare(titleB);
+      }
+    });
+
+    gallery.innerHTML = "";
+    if (mode === "date") {
+      sorted.reverse();
+    }
+    sorted.forEach(item => gallery.appendChild(item));
+  }
+
+  sortSelect.addEventListener("change", () => {
+    sortGallery(sortSelect.value);
+  });
+
+  filterSelects.forEach(select => {
+    select.addEventListener("change", () => {
+      filterGallery();
       sortGallery(sortSelect.value);
     });
-    </script>
-    
+  });
+
+  // Initialize
+  filterGallery();
+  sortGallery(sortSelect.value);
+});
+</script>
