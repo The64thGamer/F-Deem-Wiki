@@ -30,7 +30,7 @@
           <li class="navbar-item dropdown">
             <a href="#" class="dropdown-toggle">{{ $categoryName }}</a>
             {{ if $tags }}
-            <ul class="dropdown-menu">
+<div class="dropdown-menu"></div>
               {{ range $tags }}
               {{ $tag := . }}
               {{ $count := 0 }}
@@ -59,13 +59,13 @@
 </header>
 
 <script>
-  const navbar = document.getElementById('scrollable-navbar');
-  const leftBtn = document.getElementById('scroll-left');
-  const rightBtn = document.getElementById('scroll-right');
+const navbar = document.getElementById('scrollable-navbar');
+const leftBtn = document.getElementById('scroll-left');
+const rightBtn = document.getElementById('scroll-right');
 
-  function scrollNavbar(amount) {
-    navbar.scrollBy({ left: amount, behavior: 'smooth' });
-  }
+function scrollNavbar(amount) {
+  navbar.scrollBy({ left: amount, behavior: 'smooth' });
+}
 
 function updateScrollButtons() {
   const scrollLeft = Math.ceil(navbar.scrollLeft);
@@ -73,14 +73,35 @@ function updateScrollButtons() {
   const clientWidth = navbar.clientWidth;
 
   const atStart = scrollLeft <= 0;
-  const atEnd = scrollLeft >= scrollWidth - clientWidth - 1; // buffer of 1px
+  const atEnd = scrollLeft >= scrollWidth - clientWidth - 1;
 
   leftBtn.style.display = atStart ? 'none' : 'inline-block';
   rightBtn.style.display = atEnd ? 'none' : 'inline-block';
 }
 
+// Attach listeners
+navbar.addEventListener('scroll', updateScrollButtons);
+window.addEventListener('resize', updateScrollButtons);
+window.addEventListener('DOMContentLoaded', updateScrollButtons);
 
-  navbar.addEventListener('scroll', updateScrollButtons);
-  window.addEventListener('resize', updateScrollButtons);
-  window.addEventListener('DOMContentLoaded', updateScrollButtons);
+// Handle dropdown positioning
+document.querySelectorAll('.navbar-item.dropdown').forEach(item => {
+  const link = item.querySelector('.dropdown-toggle');
+  const dropdown = item.querySelector('.dropdown-menu');
+
+  if (!link || !dropdown) return;
+
+  item.addEventListener('mouseenter', () => {
+    const rect = link.getBoundingClientRect();
+    dropdown.style.display = 'block';
+    dropdown.style.position = 'fixed';
+    dropdown.style.top = `${rect.bottom}px`;
+    dropdown.style.left = `${rect.left}px`;
+    dropdown.style.zIndex = 1000;
+  });
+
+  item.addEventListener('mouseleave', () => {
+    dropdown.style.display = 'none';
+  });
+});
 </script>
