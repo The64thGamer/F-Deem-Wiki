@@ -19,13 +19,7 @@
         <option value="alpha">Alphabetical</option>
         <option value="date">Creation Date</option>
       </select>
-    </div>
-    {{ with .Content }}<div>{{ . }}</div>{{ end }}  
-</div>
-{{ end }}
-
-<div class="filter-controls">
-  {{ range $group, $tags := $tagCategories }}
+        {{ range $group, $tags := $tagCategories }}
     <label for="filter-{{ $group | urlize }}">{{ $group }}:</label>
     <select id="filter-{{ $group | urlize }}" class="tag-filter" data-group="{{ $group | urlize }}">
       <option value="all">All {{ $group }}</option>
@@ -34,7 +28,10 @@
       {{ end }}
     </select>
   {{ end }}
+    </div>
+    {{ with .Content }}<div>{{ . }}</div>{{ end }}  
 </div>
+{{ end }}
 
 
 <div class="gallery-container" id="gallery">
