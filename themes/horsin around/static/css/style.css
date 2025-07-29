@@ -417,4 +417,16 @@ ul {
   .navbar-menu {
     margin: 0em 0.25em;
   }
+
+  .gallery-item {
+  max-width: 4em;
+  max-height: 7em;
+  min-width: 4em;
+  min-height: 7em;
+}
+
+.gallery-picture img {
+  width: 4em;
+  height: 4em;
+}
 }
