@@ -71,16 +71,11 @@ a {
   width: 100%;
 }
 
-.navbar-menu {
-  display: flex;
-  list-style: none;
-  margin: 0.5em;
-  justify-content: space-evenly;
-}
-
 .navbar-item {
   position: relative;
   align-content: center;
+  flex-shrink: 0;
+  min-width: max-content;
 }
 
 .navbar-item:hover .dropdown-menu {
@@ -340,6 +335,8 @@ a {
 }
 
 .navbar-menu {
+  margin: 0.5em;
+  justify-content: space-evenly;
   display: flex;
   gap: 1em;
   padding: 0;
@@ -352,11 +349,6 @@ a {
 }
 .navbar-menu::-webkit-scrollbar {
   display: none;
-}
-
-.navbar-item {
-  flex-shrink: 0;
-  min-width: max-content;
 }
 
 .scroll-btn {
@@ -384,9 +376,6 @@ a {
   src: url('/Fonts/Eirian.ttf') format('truetype');
 }
 
-ul {
-  padding-left: 0;
-}
 
 /* ========== Responsive ========== */
 
