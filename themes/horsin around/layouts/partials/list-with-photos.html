@@ -50,6 +50,13 @@
           <img src="/photos/File Not Found.jpg" alt="{{ $page.Title }}">
         {{ end }}
       </a>
+      {{ if in $page.Params.categories "Piece" }}
+        <div class="gallery-download">
+          <a href="https://raw.githubusercontent.com/The64thGamer/F-Deem/main/Models/Parts%20(STL)/{{ $page.Title }}.stl" download title="Download STL">
+            <img src="/icons/download.svg" alt="Download .stl">
+          </a>
+        </div>
+      {{ end }}
     </div>
     <div class="gallery-link">
       <a href="{{ $page.RelPermalink }}">{{ $page.Title | truncate 17 "..." }}</a>
