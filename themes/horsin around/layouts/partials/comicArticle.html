@@ -14,30 +14,25 @@
 <hr>
 
 <div class="comic-navigation" style="text-align:center; margin-top: 1em;">
-	{{/* current numeric title */}}
 	{{ $current := .Title | int }}
 	{{ $nextNum := add $current 1 }}
 	{{ $prevNum := sub $current 1 }}
+	{{ $baseURL := "/comic" }}
 
-	{{/* limit search to pages in the "comic" section that have category = "Comic" */}}
-	{{ $sectionPages := where .Site.RegularPages "Section" "comic" }}
-	{{ $comicPages := where $sectionPages "Params.category" "Comic" }}
+	<!-- Collect all comic pages with category "Comic" -->
+	{{ $comicPages := where site.RegularPages "Params.category" "Comic" }}
 
-	{{/* FIRST — try to find the page titled "1" in the Comic category, fall back to /comic/1 */}}
-	{{ $firstMatches := where $comicPages "Title" "1" }}
-	{{ if gt (len $firstMatches) 0 }}
-		{{ $first := index $firstMatches 0 }}
-		<a href="{{ $first.RelPermalink }}">FIRST</a> |
-	{{ else }}
-		<a href="/comic/1">FIRST</a> |
-	{{ end }}
+	<!-- Get page objects for prev and next -->
+	{{ $prevPage := first 1 (where $comicPages "Title" (printf "%d" $prevNum)) | first 1 }}
+	{{ $nextPage := first 1 (where $comicPages "Title" (printf "%d" $nextNum)) | first 1 }}
 
-	{{/* PREV */}}
+	<!-- FIRST -->
+	<a href="{{ $baseURL }}/1">FIRST</a> |
+
+	<!-- PREV -->
 	{{ if gt $current 1 }}
-		{{ $prevMatches := where $comicPages "Title" (printf "%d" $prevNum) }}
-		{{ if gt (len $prevMatches) 0 }}
-			{{ $prev := index $prevMatches 0 }}
-			<a href="{{ $prev.RelPermalink }}">PREV</a> |
+		{{ with $prevPage }}
+			<a href="{{ .RelPermalink }}">PREV</a> |
 		{{ else }}
 			<span style="opacity:0.5;">PREV</span> |
 		{{ end }}
@@ -45,11 +40,9 @@
 		<span style="opacity:0.5;">PREV</span> |
 	{{ end }}
 
-	{{/* NEXT */}}
-	{{ $nextMatches := where $comicPages "Title" (printf "%d" $nextNum) }}
-	{{ if gt (len $nextMatches) 0 }}
-		{{ $next := index $nextMatches 0 }}
-		<a href="{{ $next.RelPermalink }}">NEXT</a>
+	<!-- NEXT -->
+	{{ with $nextPage }}
+		<a href="{{ .RelPermalink }}">NEXT</a>
 	{{ else }}
 		<span style="opacity:0.5;">NEXT</span>
 	{{ end }}
