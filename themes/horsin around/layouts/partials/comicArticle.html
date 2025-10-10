@@ -14,25 +14,30 @@
 <hr>
 
 <div class="comic-navigation" style="text-align:center; margin-top: 1em;">
-	{{ $currentTitle := .Title | int }}
-	{{ $nextTitle := add $currentTitle 1 }}
-	{{ $prevTitle := sub $currentTitle 1 }}
-	{{ $baseURL := "/comic" }}
+	{{/* current numeric title */}}
+	{{ $current := .Title | int }}
+	{{ $nextNum := add $current 1 }}
+	{{ $prevNum := sub $current 1 }}
 
-	<!-- get all pages in the Comic category -->
-	{{ $comicPages := where site.RegularPages "Params.category" "Comic" }}
+	{{/* limit search to pages in the "comic" section that have category = "Comic" */}}
+	{{ $sectionPages := where .Site.RegularPages "Section" "comic" }}
+	{{ $comicPages := where $sectionPages "Params.category" "Comic" }}
 
-	<!-- find next and prev comics -->
-	{{ $nextComic := where $comicPages "Title" (printf "%d" $nextTitle) | first 1 }}
-	{{ $prevComic := where $comicPages "Title" (printf "%d" $prevTitle) | first 1 }}
+	{{/* FIRST — try to find the page titled "1" in the Comic category, fall back to /comic/1 */}}
+	{{ $firstMatches := where $comicPages "Title" "1" }}
+	{{ if gt (len $firstMatches) 0 }}
+		{{ $first := index $firstMatches 0 }}
+		<a href="{{ $first.RelPermalink }}">FIRST</a> |
+	{{ else }}
+		<a href="/comic/1">FIRST</a> |
+	{{ end }}
 
-	<!-- First -->
-	<a href="{{ $baseURL }}/1">FIRST</a> |
-
-	<!-- Prev -->
-	{{ if gt $currentTitle 1 }}
-		{{ with index $prevComic 0 }}
-			<a href="{{ .RelPermalink }}">PREV</a> |
+	{{/* PREV */}}
+	{{ if gt $current 1 }}
+		{{ $prevMatches := where $comicPages "Title" (printf "%d" $prevNum) }}
+		{{ if gt (len $prevMatches) 0 }}
+			{{ $prev := index $prevMatches 0 }}
+			<a href="{{ $prev.RelPermalink }}">PREV</a> |
 		{{ else }}
 			<span style="opacity:0.5;">PREV</span> |
 		{{ end }}
@@ -40,9 +45,11 @@
 		<span style="opacity:0.5;">PREV</span> |
 	{{ end }}
 
-	<!-- Next -->
-	{{ with index $nextComic 0 }}
-		<a href="{{ .RelPermalink }}">NEXT</a>
+	{{/* NEXT */}}
+	{{ $nextMatches := where $comicPages "Title" (printf "%d" $nextNum) }}
+	{{ if gt (len $nextMatches) 0 }}
+		{{ $next := index $nextMatches 0 }}
+		<a href="{{ $next.RelPermalink }}">NEXT</a>
 	{{ else }}
 		<span style="opacity:0.5;">NEXT</span>
 	{{ end }}
