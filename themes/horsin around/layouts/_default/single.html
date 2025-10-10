@@ -5,6 +5,8 @@
       {{- $layout = "setArticle" -}}
     {{- else if in . "Documentation" -}}
       {{- $layout = "basicArticle" -}}
+    {{- else if in . "Comic" -}}
+      {{- $layout = "comicArticle" -}}
     {{- end -}}
   {{- end -}}
   <main>

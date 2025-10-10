@@ -1,0 +1,38 @@
+<article>
+	<div class="article-thumbnail">
+	{{ if .Params.pageThumbnailFile }}
+		<img src="/photos/{{ .Params.pageThumbnailFile }}">
+	{{ else }}
+		<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+	{{ end }}
+	</div>
+	<div>
+		{{ .Content }}
+	</div>
+</article>
+
+<hr>
+
+<div class="comic-navigation" style="text-align:center; margin-top: 1em;">
+	{{ $currentTitle := .Title | int }}
+	{{ $baseURL := "/content/comic" }}
+
+	<!-- First -->
+	<a href="{{ $baseURL }}/1.html">FIRST</a> |
+
+	<!-- Prev -->
+	{{ if gt $currentTitle 1 }}
+		<a href="{{ $baseURL }}/{{ sub $currentTitle 1 }}.html">PREV</a> |
+	{{ else }}
+		<span style="opacity:0.5;">PREV</span> |
+	{{ end }}
+
+	<!-- Next -->
+	{{ $next := add $currentTitle 1 }}
+	{{ $nextPath := printf "%s/%d.html" $baseURL $next }}
+	{{ if (fileExists (printf "content/comic/%d.html" $next)) }}
+		<a href="{{ $nextPath }}">NEXT</a>
+	{{ else }}
+		<span style="opacity:0.5;">NEXT</span>
+	{{ end }}
+</div>
