@@ -6,6 +6,7 @@
       <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
     {{ end }}
   </div>
+
   <div>
     {{ .Content }}
   </div>
@@ -14,18 +15,15 @@
 <hr>
 
 <div class="comic-navigation" style="text-align:center; margin-top: 1em;">
-
   {{ $current := .Title | int }}
   {{ $nextNum := add $current 1 }}
   {{ $prevNum := sub $current 1 }}
   {{ $baseURL := "/comic" }}
 
-  {{/* Collect all comic pages where category or categories include "Comic" */}}
-  {{ $allPages := site.RegularPages }}
-  {{ $comicPages := where $allPages "Params.category" "Comic" }}
-  {{ $comicPages = union $comicPages (where $allPages "Params.categories" "intersect" (slice "Comic")) }}
+  {{/* Only include pages that have "Comic" in categories */}}
+  {{ $comicPages := where site.RegularPages "Params.categories" "intersect" (slice "Comic") }}
 
-  {{/* Get prev and next pages by title */}}
+  {{/* Find previous and next pages by numeric title */}}
   {{ $prevPage := first 1 (where $comicPages "Title" (printf "%d" $prevNum)) | first 1 }}
   {{ $nextPage := first 1 (where $comicPages "Title" (printf "%d" $nextNum)) | first 1 }}
 
