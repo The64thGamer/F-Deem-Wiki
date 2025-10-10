@@ -1,7 +1,7 @@
 <article>
 	<div class="article-thumbnail">
 	{{ if .Params.pageThumbnailFile }}
-		<img src="/photos/{{ .Params.pageThumbnailFile }}">
+		<img src="/web/{{ .Params.pageThumbnailFile }}">
 	{{ else }}
 		<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
 	{{ end }}
@@ -18,11 +18,11 @@
 	{{ $baseURL := "/comic" }}
 
 	<!-- First -->
-	<a href="{{ $baseURL }}/1.html">FIRST</a> |
+	<a href="{{ $baseURL }}/1">FIRST</a> |
 
 	<!-- Prev -->
 	{{ if gt $currentTitle 1 }}
-		<a href="{{ $baseURL }}/{{ sub $currentTitle 1 }}.html">PREV</a> |
+		<a href="{{ $baseURL }}/{{ sub $currentTitle 1 }}">PREV</a> |
 	{{ else }}
 		<span style="opacity:0.5;">PREV</span> |
 	{{ end }}
