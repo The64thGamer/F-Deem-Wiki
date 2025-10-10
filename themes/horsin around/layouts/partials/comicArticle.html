@@ -15,23 +15,34 @@
 
 <div class="comic-navigation" style="text-align:center; margin-top: 1em;">
 	{{ $currentTitle := .Title | int }}
+	{{ $nextTitle := add $currentTitle 1 }}
+	{{ $prevTitle := sub $currentTitle 1 }}
 	{{ $baseURL := "/comic" }}
+
+	<!-- get all pages in the Comic category -->
+	{{ $comicPages := where site.RegularPages "Params.category" "Comic" }}
+
+	<!-- find next and prev comics -->
+	{{ $nextComic := where $comicPages "Title" (printf "%d" $nextTitle) | first 1 }}
+	{{ $prevComic := where $comicPages "Title" (printf "%d" $prevTitle) | first 1 }}
 
 	<!-- First -->
 	<a href="{{ $baseURL }}/1">FIRST</a> |
 
 	<!-- Prev -->
 	{{ if gt $currentTitle 1 }}
-		<a href="{{ $baseURL }}/{{ sub $currentTitle 1 }}">PREV</a> |
+		{{ with index $prevComic 0 }}
+			<a href="{{ .RelPermalink }}">PREV</a> |
+		{{ else }}
+			<span style="opacity:0.5;">PREV</span> |
+		{{ end }}
 	{{ else }}
 		<span style="opacity:0.5;">PREV</span> |
 	{{ end }}
 
 	<!-- Next -->
-	{{ $next := add $currentTitle 1 }}
-	{{ $nextPath := printf "%s/%d.html" $baseURL $next }}
-	{{ if (fileExists (printf "content/comic/%d.html" $next)) }}
-		<a href="{{ $nextPath }}">NEXT</a>
+	{{ with index $nextComic 0 }}
+		<a href="{{ .RelPermalink }}">NEXT</a>
 	{{ else }}
 		<span style="opacity:0.5;">NEXT</span>
 	{{ end }}
