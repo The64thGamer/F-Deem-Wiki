@@ -24,16 +24,16 @@
   {{ $comicPages := where site.RegularPages "Params.categories" "intersect" (slice "Comic") }}
 
   {{/* Find previous and next pages by numeric title */}}
-  {{ $prevPage := first 1 (where $comicPages "Title" (printf "%d" $prevNum)) | first 1 }}
-  {{ $nextPage := first 1 (where $comicPages "Title" (printf "%d" $nextNum)) | first 1 }}
+  {{ $prevMatches := where $comicPages "Title" (printf "%d" $prevNum) }}
+  {{ $nextMatches := where $comicPages "Title" (printf "%d" $nextNum) }}
 
   <!-- FIRST -->
   <a href="{{ $baseURL }}/1">FIRST</a> |
 
   <!-- PREV -->
   {{ if gt $current 1 }}
-    {{ with $prevPage }}
-      <a href="{{ .RelPermalink }}">PREV</a> |
+    {{ if gt (len $prevMatches) 0 }}
+      <a href="{{ (index $prevMatches 0).RelPermalink }}">PREV</a> |
     {{ else }}
       <span style="opacity:0.5;">PREV</span> |
     {{ end }}
@@ -42,8 +42,8 @@
   {{ end }}
 
   <!-- NEXT -->
-  {{ with $nextPage }}
-    <a href="{{ .RelPermalink }}">NEXT</a>
+  {{ if gt (len $nextMatches) 0 }}
+    <a href="{{ (index $nextMatches 0).RelPermalink }}">NEXT</a>
   {{ else }}
     <span style="opacity:0.5;">NEXT</span>
   {{ end }}
