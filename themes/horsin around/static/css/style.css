@@ -57,6 +57,12 @@ h1 {
   box-shadow: var(--card-shadow);
 }
 
+.comic-article-content{
+  width: 35em;
+  margin: auto;
+}
+
+
 .logo img {
   max-height: 2.5em;
   align-content: center;

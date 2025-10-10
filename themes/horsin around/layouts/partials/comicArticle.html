@@ -1,49 +1,52 @@
 <article>
-	<div class="article-thumbnail">
-	{{ if .Params.pageThumbnailFile }}
-		<img src="/web/{{ .Params.pageThumbnailFile }}">
-	{{ else }}
-		<img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
-	{{ end }}
-	</div>
-	<div>
-		{{ .Content }}
-	</div>
+  <div class="article-thumbnail">
+    {{ if .Params.pageThumbnailFile }}
+      <img src="/web/{{ .Params.pageThumbnailFile }}">
+    {{ else }}
+      <img src="/photos/File Not Found.jpg" alt="{{ .Title }}">
+    {{ end }}
+  </div>
+  <div>
+    {{ .Content }}
+  </div>
 </article>
 
 <hr>
 
 <div class="comic-navigation" style="text-align:center; margin-top: 1em;">
-	{{ $current := .Title | int }}
-	{{ $nextNum := add $current 1 }}
-	{{ $prevNum := sub $current 1 }}
-	{{ $baseURL := "/comic" }}
 
-	<!-- Collect all comic pages with category "Comic" -->
-	{{ $comicPages := where site.RegularPages "Params.category" "Comic" }}
+  {{ $current := .Title | int }}
+  {{ $nextNum := add $current 1 }}
+  {{ $prevNum := sub $current 1 }}
+  {{ $baseURL := "/comic" }}
 
-	<!-- Get page objects for prev and next -->
-	{{ $prevPage := first 1 (where $comicPages "Title" (printf "%d" $prevNum)) | first 1 }}
-	{{ $nextPage := first 1 (where $comicPages "Title" (printf "%d" $nextNum)) | first 1 }}
+  {{/* Collect all comic pages where category or categories include "Comic" */}}
+  {{ $allPages := site.RegularPages }}
+  {{ $comicPages := where $allPages "Params.category" "Comic" }}
+  {{ $comicPages = union $comicPages (where $allPages "Params.categories" "intersect" (slice "Comic")) }}
 
-	<!-- FIRST -->
-	<a href="{{ $baseURL }}/1">FIRST</a> |
+  {{/* Get prev and next pages by title */}}
+  {{ $prevPage := first 1 (where $comicPages "Title" (printf "%d" $prevNum)) | first 1 }}
+  {{ $nextPage := first 1 (where $comicPages "Title" (printf "%d" $nextNum)) | first 1 }}
 
-	<!-- PREV -->
-	{{ if gt $current 1 }}
-		{{ with $prevPage }}
-			<a href="{{ .RelPermalink }}">PREV</a> |
-		{{ else }}
-			<span style="opacity:0.5;">PREV</span> |
-		{{ end }}
-	{{ else }}
-		<span style="opacity:0.5;">PREV</span> |
-	{{ end }}
+  <!-- FIRST -->
+  <a href="{{ $baseURL }}/1">FIRST</a> |
 
-	<!-- NEXT -->
-	{{ with $nextPage }}
-		<a href="{{ .RelPermalink }}">NEXT</a>
-	{{ else }}
-		<span style="opacity:0.5;">NEXT</span>
-	{{ end }}
+  <!-- PREV -->
+  {{ if gt $current 1 }}
+    {{ with $prevPage }}
+      <a href="{{ .RelPermalink }}">PREV</a> |
+    {{ else }}
+      <span style="opacity:0.5;">PREV</span> |
+    {{ end }}
+  {{ else }}
+    <span style="opacity:0.5;">PREV</span> |
+  {{ end }}
+
+  <!-- NEXT -->
+  {{ with $nextPage }}
+    <a href="{{ .RelPermalink }}">NEXT</a>
+  {{ else }}
+    <span style="opacity:0.5;">NEXT</span>
+  {{ end }}
 </div>
